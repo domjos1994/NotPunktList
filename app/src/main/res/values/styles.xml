@@ -1,0 +1,10 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:panelBackground">@color/textColor</item>
+    </style>
+    <style name="TextColor">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+</resources>

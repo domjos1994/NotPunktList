@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="dominicjoas.dev.notpunktlist.actExport">
+    <item android:id="@+id/menBack" android:title="Zurück"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/menClose" android:title="Beenden"
+        android:orderInCategory="100" app:showAsAction="never" />
+</menu>

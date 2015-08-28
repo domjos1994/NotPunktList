@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">NotPunktList</string>
+    <string name="saveSettings">Einstellungen speichern</string>
+    <string name="close">Beenden</string>
+    <string name="SearchButtonDescription">Search-Button</string>
+    <string name="SearchTextHint">Note</string>
+    <string name="searchAfter">Suche nach:</string>
+    <string name="dictatMode">Diktat-Modus</string>
+    <string name="halfPoints">halbe Punkte</string>
+    <string name="tenthPoints">zehntel Noten</string>
+    <string name="quarterMarks">viertel Noten</string>
+    <string name="defaultValue">20</string>
+    <string name="maximumPoints">Maximale Punktzahl</string>
+    <string name="expandButton">Expansion Button</string>
+    <string name="tooBig">Zahl zu groß!</string>
+    <string name="searchFailed">Die Suchangabe ist fehlerhaft!</string>
+    <string name="maximumMistakes">Maximale Fehleranzahl</string>
+    <string name="title_activity_act_export">Notenliste exportieren</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="exportList">Liste Exportieren</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+</resources>

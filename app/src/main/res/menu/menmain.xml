@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".actMain">
+    <item android:id="@+id/menSaveSettings" android:title="@string/saveSettings"
+        android:orderInCategory="100" app:showAsAction="never"/>
+    <item android:id="@+id/menExport" android:title="@string/exportList"
+        android:orderInCategory="100" app:showAsAction="never"/>
+    <item android:id="@+id/menCloseApp" android:title="@string/close"
+        android:orderInCategory="100" app:showAsAction="never"/>
+</menu>
