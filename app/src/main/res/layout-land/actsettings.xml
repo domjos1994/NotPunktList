@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="dominicjoas.dev.notpunktlist.activities.actSettings">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:stretchColumns="*"
+            android:shrinkColumns="*"
+            android:layout_toLeftOf="@+id/tbl"
+            android:layout_toStartOf="@+id/tbl">
+
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent">
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:id="@+id/lvBoxes"
+                    android:layout_span="32"/>
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/cmdBackgrounds"
+                    android:layout_span="8"/>
+            </TableRow>
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent">
+                <GridView
+                    android:layout_width="wrap_content"
+                    android:layout_height="150dp"
+                    android:id="@+id/grdBackgrounds"
+                    android:layout_span="40"
+                    android:numColumns="7"/>
+            </TableRow>
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Speichern"
+                    android:id="@+id/cmdSave"
+                    android:layout_span="40"/>
+            </TableRow>
+        </TableLayout>
+        <TableLayout
+            android:layout_width="200dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/tbl">
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pfad zum Export-Verzeichnis"
+                    android:id="@+id/lblPathToExport" />
+            </TableRow>
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent">
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtPath"/>
+            </TableRow>
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pfad speichern"
+                    android:id="@+id/cmdSavePath"/>
+            </TableRow>
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Zurück"
+                    android:id="@+id/cmdBack"/>
+            </TableRow>
+        </TableLayout>
+    </RelativeLayout>
+</RelativeLayout>
