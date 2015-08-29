@@ -122,7 +122,9 @@ public class actSettings extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menBack) {
+            setResult(0);
+            finish();
             return true;
         }
 

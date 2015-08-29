@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +31,7 @@ import dominicjoas.dev.notpunktlist.classes.clsHelper;
 import dominicjoas.dev.notpunktlist.classes.clsMarkList;
 import dominicjoas.dev.notpunktlist.classes.clsXML;
 
-public class actExport extends Activity {
+public class actExport extends AppCompatActivity {
 
     RelativeLayout rlMain;
     EditText txtPath, txtContent;

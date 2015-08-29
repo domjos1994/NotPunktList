@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -22,7 +23,7 @@ import dominicjoas.dev.notpunktlist.R;
 import dominicjoas.dev.notpunktlist.classes.clsHelper;
 import dominicjoas.dev.notpunktlist.classes.clsMarkList;
 
-public class actMain extends Activity {
+public class actMain extends AppCompatActivity {
 
     RelativeLayout rlMain;
     TableLayout tblSettings;
