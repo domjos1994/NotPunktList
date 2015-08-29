@@ -5,6 +5,8 @@
         android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/menExport" android:title="@string/exportList"
         android:orderInCategory="100" app:showAsAction="never"/>
+    <item android:id="@+id/menOptions" android:title="Optionen"
+        android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/menCloseApp" android:title="@string/close"
         android:orderInCategory="100" app:showAsAction="never"/>
 </menu>
