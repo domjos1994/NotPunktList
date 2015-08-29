@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_bmp">
+    android:id="@+id/rlMain"
+    android:background="@drawable/medium_bg_texture_04">
 
     <GridView
         android:layout_width="fill_parent"
@@ -29,7 +30,8 @@
         android:shrinkColumns="*"
         android:layout_alignParentBottom="true"
         android:id="@+id/tblSettings"
-        android:background="@drawable/background_controls_bmp">
+        android:background="@drawable/dark_bg_texture_04"
+        android:tileMode="repeat">
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

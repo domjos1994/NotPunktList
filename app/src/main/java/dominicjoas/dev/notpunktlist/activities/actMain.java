@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,13 +14,17 @@ import android.view.View;
 import android.widget.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import dominicjoas.dev.notpunktlist.R;
+import dominicjoas.dev.notpunktlist.classes.clsHelper;
 import dominicjoas.dev.notpunktlist.classes.clsMarkList;
 
 public class actMain extends Activity {
 
+    RelativeLayout rlMain;
     TableLayout tblSettings;
     ImageButton cmdExp, cmdSearch;
     EditText txtMaxPoints, txtSearch;
@@ -35,16 +38,14 @@ public class actMain extends Activity {
     List<String> ls = new ArrayList<>();
     List<String> lsHeader = new ArrayList<>();
     clsMarkList marks = null;
-    boolean switchVersion = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actmain);
         try {
-            switchVersion = Build.VERSION.SDK_INT>=Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
-
+            rlMain = (RelativeLayout) findViewById(R.id.rlMain);
             tblSettings = (TableLayout) findViewById(R.id.tblSettings);
             if(getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
                 cmdExp = (ImageButton) findViewById(R.id.cmdOpenClose);
@@ -62,14 +63,14 @@ public class actMain extends Activity {
             lvHeader = (GridView) findViewById(R.id.lvHeader);
             lblMaxPoints = (TextView) findViewById(R.id.lblMaxPoints);
             lvHeader.setEnabled(true);
-            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = getBaseContext().getSharedPreferences("NOTPUNKTLIST",Context.MODE_PRIVATE);
             txtMaxPoints.setText(sharedPref.getString(String.valueOf(R.string.maximumPoints), String.valueOf(txtMaxPoints.getText())));
             optQuarterMarks.setChecked(sharedPref.getBoolean(String.valueOf(R.string.quarterMarks), optQuarterMarks.isChecked()));
             optMarks.setChecked(sharedPref.getBoolean("Note", optMarks.isChecked()));
             chkHalfPoints.setChecked(sharedPref.getBoolean(String.valueOf(R.string.halfPoints), false));
             chkDictatMode.setChecked(sharedPref.getBoolean(String.valueOf(R.string.dictatMode), false));
             changeSearchText();
-
+            updateBackgrounds();
 
             if(chkDictatMode.isChecked()) {
                 optPoints.setText("Fehler");
@@ -218,7 +219,7 @@ public class actMain extends Activity {
         }
 
         if(id == R.id.menSaveSettings) {
-            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = getBaseContext().getSharedPreferences("NOTPUNKTLIST", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString(String.valueOf(R.string.maximumPoints), txtMaxPoints.getText().toString());
             editor.putBoolean(String.valueOf(R.string.quarterMarks), optQuarterMarks.isChecked());
@@ -246,7 +247,20 @@ public class actMain extends Activity {
             }
         }
 
+        if(id == R.id.menOptions) {
+            Intent intent = new Intent(this.getApplicationContext(), actSettings.class);
+            startActivityForResult(intent, 0);
+
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==0) {
+            updateBackgrounds();
+        }
     }
 
     private List<String> createList() {
@@ -268,6 +282,7 @@ public class actMain extends Activity {
                     adapterHeader.add("Punkte");
                     adapterHeader.add("Note");
                     List<String> lsMarks = marks.generateList();
+                    Collections.reverse(lsMarks);
                     for (String item : lsMarks) {
                         adapter.add(item.split(";")[0]);
                         adapter.add(item.split(";")[1]);
@@ -315,6 +330,20 @@ public class actMain extends Activity {
             } else {
                 txtSearch.setHint("Anzahl der Punkte");
             }
+        }
+    }
+
+    private void updateBackgrounds() {
+        SharedPreferences sharedPref = getBaseContext().getSharedPreferences("NOTPUNKTLIST",Context.MODE_PRIVATE);
+        final int sdk = android.os.Build.VERSION.SDK_INT;
+        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            rlMain.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Hintergrund", R.drawable.light_bg_texture_01)));
+            lvHeader.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kopfbereich", R.drawable.medium_bg_texture_04)));
+            tblSettings.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kontrollzentrum", R.drawable.dark_bg_texture_04)));
+        } else {
+            rlMain.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Hintergrund", R.drawable.light_bg_texture_01)));
+            lvHeader.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kopfbereich", R.drawable.medium_bg_texture_04)));
+            tblSettings.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kontrollzentrum", R.drawable.dark_bg_texture_04)));
         }
     }
 }

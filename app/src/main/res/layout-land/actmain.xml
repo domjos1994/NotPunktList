@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_bmp">
+    android:background="@drawable/medium_bg_texture_04"
+    android:id="@+id/rlMain">
 
     <GridView
         android:layout_width="fill_parent"
@@ -31,7 +32,7 @@
         android:id="@+id/svSettings"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/background_controls_bmp"
+        android:background="@drawable/dark_bg_texture_04"
         android:paddingLeft="5dp">
         <TableLayout
             android:layout_width="fill_parent"
