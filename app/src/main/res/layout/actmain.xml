@@ -102,6 +102,7 @@
                 android:layout_span="20"
                 android:text="@string/halfPoints"
                 android:textSize="12sp"
+                android:checked="true"
                 style="@style/TextColor"/>
             <CheckBox
                 android:layout_height="wrap_content"
