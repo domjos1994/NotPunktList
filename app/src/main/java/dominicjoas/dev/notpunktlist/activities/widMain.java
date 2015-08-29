@@ -46,7 +46,7 @@ public class widMain extends AppWidgetProvider {
     }
 
     private static String[] getList(Context ctx) {
-        SharedPreferences pref = ctx.getSharedPreferences("NOTPUNKTLIST", Context.MODE_PRIVATE);
+        SharedPreferences pref =  ctx.getSharedPreferences("NOTPUNKTLIST",Context.MODE_PRIVATE);
         double maxPoints = Double.parseDouble(pref.getString(String.valueOf(R.string.maximumPoints), "20"));
         boolean quarterMarks = pref.getBoolean(String.valueOf(R.string.quarterMarks), false);
         boolean halfPoints = pref.getBoolean(String.valueOf(R.string.halfPoints), false);
