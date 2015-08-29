@@ -1,6 +1,8 @@
 package dominicjoas.dev.notpunktlist.activities;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -23,11 +26,13 @@ import java.util.List;
 import java.util.Map;
 
 import dominicjoas.dev.notpunktlist.R;
+import dominicjoas.dev.notpunktlist.classes.clsHelper;
 import dominicjoas.dev.notpunktlist.classes.clsMarkList;
 import dominicjoas.dev.notpunktlist.classes.clsXML;
 
 public class actExport extends Activity {
 
+    RelativeLayout rlMain;
     EditText txtPath, txtContent;
     RadioButton optTXT, optXML, optCSV;
     Button cmdExport;
@@ -37,6 +42,7 @@ public class actExport extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actexport);
 
+        rlMain = (RelativeLayout) findViewById(R.id.rlMain);
         txtPath = (EditText) findViewById(R.id.txtPath);
         txtContent = (EditText) findViewById(R.id.txtContent);
 
@@ -47,6 +53,9 @@ public class actExport extends Activity {
         cmdExport = (Button) findViewById(R.id.cmdExport);
 
         txtPath.setText(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
+        txtPath.setEnabled(false);
+
+        updateBackgrounds();
 
         cmdExport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,5 +216,18 @@ public class actExport extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateBackgrounds() {
+        SharedPreferences sharedPref = getBaseContext().getSharedPreferences("NOTPUNKTLIST", Context.MODE_PRIVATE);
+        final int sdk = android.os.Build.VERSION.SDK_INT;
+        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            rlMain.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kontrollzentrum", R.drawable.light_bg_texture_01)));
+            txtContent.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Hintergrund", R.drawable.cold_bg_texture_01)));
+        } else {
+            rlMain.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kontrollzentrum", R.drawable.light_bg_texture_01)));
+            txtContent.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Hintergrund", R.drawable.cold_bg_texture_01)));
+        }
+        txtPath.setText(sharedPref.getString("Pfad", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()));
     }
 }

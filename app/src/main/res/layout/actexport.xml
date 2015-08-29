@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="dominicjoas.dev.notpunktlist.activities.actExport"
-    android:background="@drawable/background_bmp">
+    android:id="@+id/rlMain"
+    android:background="@drawable/dark_bg_texture_04">
 
 
     <EditText
@@ -70,7 +71,6 @@
         android:layout_height="200dp"
         android:inputType="textMultiLine"
         android:id="@+id/txtContent"
-        android:background="@drawable/background_controls_bmp"
         android:editable="false"
         android:textColor="@color/textColor"
         android:layout_below="@+id/scrollView"
@@ -78,7 +78,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/cmdExport"/>
+        android:layout_above="@+id/cmdExport"
+        android:background="@drawable/medium_bg_texture_04"/>
 
     <Button
         android:layout_width="wrap_content"
