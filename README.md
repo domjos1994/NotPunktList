@@ -1,5 +1,5 @@
 # NotPunktList
-Dies ist eine Android-App zum erstellen von Notenlisten.<br>
+Dies ist eine Android-App zum Erstellen von Notenlisten.<br>
 Hinweis: Man kann die Basisinformationen im Menu speichern.
 
 ## Export
