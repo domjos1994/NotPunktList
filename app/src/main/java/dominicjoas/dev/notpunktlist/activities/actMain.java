@@ -1,27 +1,31 @@
 package dominicjoas.dev.notpunktlist.activities;
 
-import android.app.Activity;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import dominicjoas.dev.notpunktlist.R;
 import dominicjoas.dev.notpunktlist.classes.clsHelper;
 import dominicjoas.dev.notpunktlist.classes.clsMarkList;
+import dominicjoas.dev.notpunktlist.classes.clsSharedPreference;
 
 public class actMain extends AppCompatActivity {
 
@@ -39,13 +43,14 @@ public class actMain extends AppCompatActivity {
     List<String> ls = new ArrayList<>();
     List<String> lsHeader = new ArrayList<>();
     clsMarkList marks = null;
+    clsSharedPreference pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actmain);
         try {
-
+            pref = new clsSharedPreference(getApplicationContext());
             rlMain = (RelativeLayout) findViewById(R.id.rlMain);
             tblSettings = (TableLayout) findViewById(R.id.tblSettings);
             if(getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
@@ -63,25 +68,21 @@ public class actMain extends AppCompatActivity {
             lvMarkList = (GridView) findViewById(R.id.grdMarkList);
             lvHeader = (GridView) findViewById(R.id.lvHeader);
             lblMaxPoints = (TextView) findViewById(R.id.lblMaxPoints);
-            lvHeader.setEnabled(true);
-            SharedPreferences sharedPref = getBaseContext().getSharedPreferences("NOTPUNKTLIST",Context.MODE_PRIVATE);
-            txtMaxPoints.setText(sharedPref.getString(String.valueOf(R.string.maximumPoints), String.valueOf(txtMaxPoints.getText())));
-            optQuarterMarks.setChecked(sharedPref.getBoolean(String.valueOf(R.string.quarterMarks), optQuarterMarks.isChecked()));
-            optMarks.setChecked(sharedPref.getBoolean("Note", optMarks.isChecked()));
-            chkHalfPoints.setChecked(sharedPref.getBoolean(String.valueOf(R.string.halfPoints), false));
-            chkDictatMode.setChecked(sharedPref.getBoolean(String.valueOf(R.string.dictatMode), false));
+            lvHeader.setEnabled(false);
+            txtMaxPoints.setText(pref.getMaxPoints());
+            optQuarterMarks.setChecked(pref.getQuarterMarks());
+            chkHalfPoints.setChecked(pref.getHalfPoints());
+            chkDictatMode.setChecked(pref.getDictMode());
             changeSearchText();
             updateBackgrounds();
 
             if(chkDictatMode.isChecked()) {
-                optPoints.setText("Fehler");
+                optPoints.setText(getString(R.string.mistakes));
             } else {
-                optPoints.setText("Punkte");
+                optPoints.setText(getString(R.string.points));
             }
         } catch (Exception ex) {
-            CharSequence text = String.valueOf("Es gab Probleme beim Laden der Einstellungen!");
-            Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-            toast.show();
+            clsHelper.createToast(getApplicationContext(), getString(R.string.errorProblemsWithSettings));
         }
 
         adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1, ls);
@@ -149,11 +150,11 @@ public class actMain extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (chkDictatMode.isChecked()) {
-                    lblMaxPoints.setText("Maximale Fehleranzahl");
-                    optPoints.setText("Fehler");
+                    lblMaxPoints.setText(getString(R.string.maxMistakes));
+                    optPoints.setText(getString(R.string.mistakes));
                 } else {
-                    lblMaxPoints.setText("Maximale Punktzahl");
-                    optPoints.setText("Punkte");
+                    lblMaxPoints.setText(getString(R.string.maxPoints));
+                    optPoints.setText(getString(R.string.points));
                 }
                 createList();
                 changeSearchText();
@@ -163,24 +164,7 @@ public class actMain extends AppCompatActivity {
         cmdSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!txtSearch.getText().toString().equals("")) {
-                    try {
-                        txtSearch.setText(txtSearch.getText().toString().replace(",", "."));
-                        if (optPoints.isChecked()) {
-                            CharSequence text = String.valueOf(marks.findPoints(createList(), Double.parseDouble(txtSearch.getText().toString())));
-                            Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-                            toast.show();
-                        } else {
-                            CharSequence text = String.valueOf(marks.findMark(createList(), Double.parseDouble(txtSearch.getText().toString())));
-                            Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-                            toast.show();
-                        }
-                    } catch (Exception ex) {
-                        CharSequence text = String.valueOf("Die Suchangabe ist fehlerhaft!");
-                        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-                        toast.show();
-                    }
-                }
+                find();
             }
         });
 
@@ -197,49 +181,58 @@ public class actMain extends AppCompatActivity {
                 changeSearchText();
             }
         });
+
+        txtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    find();
+                    closeSoftKeyBoard();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        txtMaxPoints.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                closeSoftKeyBoard();
+                return true;
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menmain, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menCloseApp) {
             System.exit(0);
             return true;
         }
 
         if(id == R.id.menSaveSettings) {
-            SharedPreferences sharedPref = getBaseContext().getSharedPreferences("NOTPUNKTLIST", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(String.valueOf(R.string.maximumPoints), txtMaxPoints.getText().toString());
-            editor.putBoolean(String.valueOf(R.string.quarterMarks), optQuarterMarks.isChecked());
-            editor.putBoolean("Note", optMarks.isChecked());
-            editor.putBoolean(String.valueOf(R.string.halfPoints), chkHalfPoints.isChecked());
-            editor.putBoolean(String.valueOf(R.string.dictatMode), chkDictatMode.isChecked());
-            editor.commit();
-            CharSequence text = String.valueOf("Einstellungen wurden gespeichert!");
-            Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-            toast.show();
+            pref.setMaxPoints(txtMaxPoints.getText().toString());
+            pref.setQuarterMarks(optQuarterMarks.isChecked());
+            pref.setHalfPoints(chkHalfPoints.isChecked());
+            pref.setDictMode(chkDictatMode.isChecked());
+            pref.save();
+            clsHelper.createToast(getApplicationContext(), getString(R.string.infoSettingsSaved));
         }
 
         if(id == R.id.menExport) {
             try {
                 Intent intent = new Intent(this.getApplicationContext(), actExport.class);
-                intent.putExtra("maxPoints", txtMaxPoints.getText().toString());
-                intent.putExtra("quarterMarks", optQuarterMarks.isChecked());
-                intent.putExtra("halfPoints", chkHalfPoints.isChecked());
-                intent.putExtra("dictMode", chkDictatMode.isChecked());
+                intent.putExtra(getString(R.string.prefMaxPoints), txtMaxPoints.getText().toString());
+                intent.putExtra(getString(R.string.prefQuarterMarks), optQuarterMarks.isChecked());
+                intent.putExtra(getString(R.string.prefHalfPoints), chkHalfPoints.isChecked());
+                intent.putExtra(getString(R.string.prefDictMode), chkDictatMode.isChecked());
                 startActivityForResult(intent, 0);
             }catch (Exception ex) {
                 CharSequence text = String.valueOf(ex.toString());
@@ -251,7 +244,14 @@ public class actMain extends AppCompatActivity {
         if(id == R.id.menOptions) {
             Intent intent = new Intent(this.getApplicationContext(), actSettings.class);
             startActivityForResult(intent, 0);
+        }
 
+        if(id == R.id.menSearch) {
+            if(getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                tblSettings.getLayoutParams().height = tblHeight;
+                cmdExp.setImageResource(R.drawable.exp_close);
+            }
+            txtSearch.requestFocus();
         }
 
         return super.onOptionsItemSelected(item);
@@ -264,51 +264,64 @@ public class actMain extends AppCompatActivity {
         }
     }
 
+    private void find() {
+        try {
+            if (!txtSearch.getText().toString().equals("")) {
+                txtSearch.setText(txtSearch.getText().toString().replace(",", "."));
+                if (optPoints.isChecked()) {
+                    clsHelper.createToast(getApplicationContext(), String.valueOf(marks.findPoints(createList(), Double.parseDouble(txtSearch.getText().toString()))));
+                } else {
+                    clsHelper.createToast(getApplicationContext(), String.valueOf(marks.findMark(createList(), Double.parseDouble(txtSearch.getText().toString()))));
+                }
+            }
+        } catch (Exception ex) {
+            clsHelper.createToast(this, getString(R.string.errorSearchFailed));
+        }
+    }
+
+    private void closeSoftKeyBoard() {
+        try {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch(NullPointerException ex) {
+            clsHelper.createToast(this, getString(R.string.errorSomethingWentWrong) + "\n" + ex.getLocalizedMessage());
+        }
+    }
+
     private List<String> createList() {
         if(!txtMaxPoints.getText().toString().equals("")) {
             try {
+                adapter.clear();
+                adapterHeader.clear();
                 if(Double.parseDouble(txtMaxPoints.getText().toString())>9999) {
-                    CharSequence text = String.valueOf(String.valueOf("Die Zahl ist zu groß!"));
-                    Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-                    toast.show();
-                    adapter.clear();
-                    adapterHeader.clear();
+                    clsHelper.createToast(getApplicationContext(), getString(R.string.errorNumberTooBig));
                     return null;
                 }
                 boolean dictat = chkDictatMode.isChecked();
+                marks = new clsMarkList(Double.parseDouble(txtMaxPoints.getText().toString()), !chkHalfPoints.isChecked(), optTenthMarks.isChecked());
+                List<String> lsMarks = marks.generateList();
                 if(!dictat) {
-                    adapter.clear();
-                    adapterHeader.clear();
-                    marks = new clsMarkList(Double.parseDouble(txtMaxPoints.getText().toString()), !chkHalfPoints.isChecked(), optTenthMarks.isChecked());
-                    adapterHeader.add("Punkte");
-                    adapterHeader.add("Note");
-                    List<String> lsMarks = marks.generateList();
+                    adapterHeader.add(getString(R.string.points));
                     Collections.reverse(lsMarks);
                     for (String item : lsMarks) {
-                        adapter.add(item.split(";")[0]);
-                        adapter.add(item.split(";")[1]);
+                        adapter.add(item.split(getString(R.string.sysSplitChar))[0]);
+                        adapter.add(item.split(getString(R.string.sysSplitChar))[1]);
                     }
-                    lvMarkList.setAdapter(adapter);
-                    lvHeader.setAdapter(adapterHeader);
-                    return lsMarks;
                 } else {
-                    adapterHeader.clear();
-                    adapter.clear();
-                    marks = new clsMarkList(Double.parseDouble(txtMaxPoints.getText().toString()), !chkHalfPoints.isChecked(), optTenthMarks.isChecked());
-                    adapterHeader.add("Fehler");
-                    adapterHeader.add("Note");
-                    List<String> lsMarks = marks.generateList();
+                    adapterHeader.add(getString(R.string.mistakes));
                     List<String> lsCorrect = new ArrayList<>();
                     for (String item : lsMarks) {
-                        String cur = String.valueOf(Double.parseDouble(txtMaxPoints.getText().toString()) - Double.parseDouble(item.split(";")[0]));
+                        String cur = String.valueOf(Double.parseDouble(txtMaxPoints.getText().toString()) - Double.parseDouble(item.split(getString(R.string.sysSplitChar))[0]));
                         adapter.add(cur);
-                        adapter.add(item.split(";")[1]);
-                        lsCorrect.add(cur + ";" + item.split(";")[1]);
+                        adapter.add(item.split(getString(R.string.sysSplitChar))[1]);
+                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + item.split(getString(R.string.sysSplitChar))[1]);
                     }
-                    lvMarkList.setAdapter(adapter);
-                    lvHeader.setAdapter(adapterHeader);
-                    return lsCorrect;
+                    lsMarks = lsCorrect;
                 }
+                adapterHeader.add(getString(R.string.mark));
+                lvMarkList.setAdapter(adapter);
+                lvHeader.setAdapter(adapterHeader);
+                return lsMarks;
             } catch(Exception ex) {
                 System.out.println(ex.toString());
                 adapter.clear();
@@ -324,27 +337,32 @@ public class actMain extends AppCompatActivity {
 
     private void changeSearchText() {
         if (optPoints.isChecked()) {
-            txtSearch.setHint("Note");
+            txtSearch.setHint(getString(R.string.mark));
         } else {
             if (chkDictatMode.isChecked()) {
-                txtSearch.setHint("Anzahl der Fehler");
+                txtSearch.setHint(getString(R.string.countMistakes));
             } else {
-                txtSearch.setHint("Anzahl der Punkte");
+                txtSearch.setHint(getString(R.string.countPoints));
             }
         }
     }
 
     private void updateBackgrounds() {
-        SharedPreferences sharedPref = getBaseContext().getSharedPreferences("NOTPUNKTLIST",Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getBaseContext().getSharedPreferences(getString(R.string.sysSharedPref),Context.MODE_PRIVATE);
         final int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            rlMain.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Hintergrund", R.drawable.light_bg_texture_01)));
-            lvHeader.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kopfbereich", R.drawable.medium_bg_texture_04)));
-            tblSettings.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kontrollzentrum", R.drawable.dark_bg_texture_04)));
+            rlMain.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefBackground), R.drawable.light_bg_texture_01)));
+            lvHeader.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefHeader), R.drawable.medium_bg_texture_04)));
+            tblSettings.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefCTRLCenter), R.drawable.dark_bg_texture_04)));
         } else {
-            rlMain.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Hintergrund", R.drawable.light_bg_texture_01)));
-            lvHeader.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kopfbereich", R.drawable.medium_bg_texture_04)));
-            tblSettings.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kontrollzentrum", R.drawable.dark_bg_texture_04)));
+            dangerousBG(sharedPref);
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void dangerousBG(SharedPreferences sharedPref) {
+        rlMain.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefBackground), R.drawable.light_bg_texture_01)));
+        lvHeader.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefHeader), R.drawable.medium_bg_texture_04)));
+        tblSettings.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefCTRLCenter), R.drawable.dark_bg_texture_04)));
     }
 }

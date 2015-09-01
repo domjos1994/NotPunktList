@@ -1,8 +1,7 @@
 package dominicjoas.dev.notpunktlist.activities;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,6 +27,7 @@ import java.util.Map;
 import dominicjoas.dev.notpunktlist.R;
 import dominicjoas.dev.notpunktlist.classes.clsHelper;
 import dominicjoas.dev.notpunktlist.classes.clsMarkList;
+import dominicjoas.dev.notpunktlist.classes.clsSharedPreference;
 import dominicjoas.dev.notpunktlist.classes.clsXML;
 
 public class actExport extends AppCompatActivity {
@@ -37,12 +36,14 @@ public class actExport extends AppCompatActivity {
     EditText txtPath, txtContent;
     RadioButton optTXT, optXML, optCSV;
     Button cmdExport;
+    clsSharedPreference pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actexport);
 
+        pref = new clsSharedPreference(getApplicationContext());
         rlMain = (RelativeLayout) findViewById(R.id.rlMain);
         txtPath = (EditText) findViewById(R.id.txtPath);
         txtContent = (EditText) findViewById(R.id.txtContent);
@@ -55,121 +56,110 @@ public class actExport extends AppCompatActivity {
 
         txtPath.setText(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
         txtPath.setEnabled(false);
+        txtContent.setFocusable(false);
 
         updateBackgrounds();
 
         cmdExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clsMarkList list = new clsMarkList(Double.parseDouble(getIntent().getStringExtra("maxPoints")), !getIntent().getBooleanExtra("halfPoints", true), !getIntent().getBooleanExtra("quarterMarks", true));
+                clsMarkList list = new clsMarkList(Double.parseDouble(getIntent().getStringExtra(getString(R.string.prefMaxPoints))), !getIntent().getBooleanExtra(getString(R.string.prefHalfPoints), true), !getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true));
                 List<String> marklist = list.generateList();
                 List<String> lsCorrect = new ArrayList<>();
-                if(getIntent().getBooleanExtra("dictMode", true)) {
-                    lsCorrect.add("Fehler             Note");
+                if(getIntent().getBooleanExtra(getString(R.string.prefDictMode), true)) {
+                    lsCorrect.add(getString(R.string.mistakes) + "             " + getString(R.string.mark));
                     for(String current : marklist) {
-                        String cur = String.valueOf(Double.parseDouble(getIntent().getStringExtra("maxPoints")) - Double.parseDouble(current.split(";")[0]));
+                        String cur = String.valueOf(Double.parseDouble(getIntent().getStringExtra(getString(R.string.prefMaxPoints))) - Double.parseDouble(current.split(getString(R.string.sysSplitChar))[0]));
                         for(int i = cur.length(); i<=20;i++) {
                             cur += " ";
                         }
-                        lsCorrect.add(cur + ";" + current.split(";")[1]);
+                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + current.split(getString(R.string.sysSplitChar))[1]);
                     }
                 } else {
-                    lsCorrect.add("Punkte             Note");
+                    lsCorrect.add(getString(R.string.points) + "             " + getString(R.string.mark));
                     for(String current : marklist) {
-                        String cur = current.split(";")[0];
+                        String cur = current.split(getString(R.string.sysSplitChar))[0];
                         for(int i = cur.length(); i<=20;i++) {
                             cur += " ";
                         }
-                        lsCorrect.add(cur + ";" + current.split(";")[1]);
+                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + current.split(getString(R.string.sysSplitChar))[1]);
                     }
                 }
                 String path = "";
+                try {
+                    if(!new File(txtPath.getText().toString()).exists()) {
+                        if(!new File(txtPath.getText().toString()).mkdirs()) {
+                            clsHelper.createToast(getApplicationContext(), getString(R.string.errorCantCreateFolders));
+                        }
+                    }
+                } catch(Exception ex) {
+                    clsHelper.createToast(getApplicationContext(), ex.getLocalizedMessage());
+                }
                 if(optTXT.isChecked()) {
                     try {
-                        if(!new File(txtPath.getText().toString()).exists()) {
-                            new File(txtPath.getText().toString()).mkdirs();
-                        }
-                        path = txtPath.getText().toString() + "/" + "export_" + new Date().getTime() + ".txt";
-                        PrintWriter writer = new PrintWriter(path, "UTF-8");
-                        writer.println("NotPunktList - Export");
-                        writer.println("Settings");
-                        writer.println("Maximale Punktzahl:\t\t" + getIntent().getStringExtra("maxPoints"));
-                        writer.println("Viertel Noten:\t\t\t" + getIntent().getBooleanExtra("quarterMarks", true));
-                        writer.println("Halbe Punkte:\t\t\t" + getIntent().getBooleanExtra("halfPoints", true));
-                        writer.println("Diktat-Modus:\t\t\t" + getIntent().getBooleanExtra("dictMode", true));
+                        path = txtPath.getText().toString() + "/" + getString(R.string.expFilePart) + "_" + new Date().getTime() + ".txt";
+                        PrintWriter writer = new PrintWriter(path, getString(R.string.sysCharset));
+                        writer.println(getString(R.string.expTitle));
+                        writer.println(getString(R.string.settings));
+                        writer.println(getString(R.string.maxPoints) + ":\t\t" + getIntent().getStringExtra(getString(R.string.prefMaxPoints)));
+                        writer.println(getString(R.string.quarterMarks) + ":\t\t\t" + getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true));
+                        writer.println(getString(R.string.halfPoints) + ":\t\t\t" + getIntent().getBooleanExtra(getString(R.string.halfPoints), true));
+                        writer.println(getString(R.string.dictatMode) + ":\t\t\t" + getIntent().getBooleanExtra(getString(R.string.prefDictMode), true));
                         for(String item : lsCorrect) {
                             writer.println(item);
                         }
                         writer.close();
-                        CharSequence text = String.valueOf("Export in Datei '"+ path +"' erfolgreich!");
-                        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-                        toast.show();
+                        clsHelper.createToast(getApplicationContext(), getString(R.string.infoExportSuccessfully));
                     } catch(Exception ex) {
-                        CharSequence text = String.valueOf("Fehler beim exportieren der Liste!");
-                        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-                        toast.show();
+                        clsHelper.createToast(getApplicationContext(), getString(R.string.errorCantCreateFile));
                     }
                 } else if(optCSV.isChecked()) {
                     try {
-                        if(!new File(txtPath.getText().toString()).exists()) {
-                            new File(txtPath.getText().toString()).mkdirs();
-                        }
-                        path = txtPath.getText().toString() + "/" + "export_" + new Date().getTime() + ".csv";
-                        PrintWriter writer = new PrintWriter(path, "UTF-8");
-                        writer.println("NotPunktList - Export");
-                        writer.println("Settings");
-                        writer.println("Maximale Punktzahl;" + getIntent().getStringExtra("maxPoints"));
-                        writer.println("Viertel Noten;" + getIntent().getBooleanExtra("quarterMarks", true));
-                        writer.println("Halbe Punkte;" + getIntent().getBooleanExtra("halfPoints", true));
-                        writer.println("Diktat-Modus;" + getIntent().getBooleanExtra("dictMode", true));
+                        path = txtPath.getText().toString() + "/" + getString(R.string.expFilePart) + "_" + new Date().getTime() + ".csv";
+                        PrintWriter writer = new PrintWriter(path, getString(R.string.sysCharset));
+                        writer.println(getString(R.string.expTitle));
+                        writer.println(getString(R.string.settings));
+                        writer.println(getString(R.string.maxPoints) + getString(R.string.sysSplitChar) + getIntent().getStringExtra(getString(R.string.prefMaxPoints)));
+                        writer.println(getString(R.string.quarterMarks) + getString(R.string.sysSplitChar) + getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true));
+                        writer.println(getString(R.string.halfPoints) + getString(R.string.sysSplitChar) + getIntent().getBooleanExtra(getString(R.string.halfPoints), true));
+                        writer.println(getString(R.string.dictatMode) + getString(R.string.sysSplitChar) + getIntent().getBooleanExtra(getString(R.string.prefDictMode), true));
                         for(String item : lsCorrect) {
                             writer.println(item.replace(" ", ""));
                         }
                         writer.close();
-                        CharSequence text = String.valueOf("Export in Datei '"+ path +"' erfolgreich!");
-                        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-                        toast.show();
+                        clsHelper.createToast(getApplicationContext(), getString(R.string.infoExportSuccessfully));
                     } catch(Exception ex) {
-                        CharSequence text = String.valueOf("Fehler beim exportieren der Liste!");
-                        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-                        toast.show();
+                        clsHelper.createToast(getApplicationContext(), getString(R.string.errorCantCreateFile));
                     }
                 } else {
                     try {
-                        if(!new File(txtPath.getText().toString()).exists()) {
-                            new File(txtPath.getText().toString()).mkdirs();
-                        }
-                        clsXML xml = new clsXML("notpunktlistexport");
-                        path = txtPath.getText().toString() + "/" + "export_" + new Date().getTime() + ".xml";
+                        clsXML xml = new clsXML(getString(R.string.expXMLRoot));
+                        path = txtPath.getText().toString() + "/" +  getString(R.string.expFilePart) + "_" + new Date().getTime() + ".xml";
                         Map<String, String> dict = new HashMap<>();
-                        dict.put("maxpkt", getIntent().getStringExtra("maxPoints"));
-                        dict.put("viertel_noten", String.valueOf(getIntent().getBooleanExtra("quarterMarks", true)));
-                        dict.put("halbe_punkte", String.valueOf(getIntent().getBooleanExtra("halfPoints", true)));
-                        dict.put("diktat_modus", String.valueOf(getIntent().getBooleanExtra("dictMode", true)));
-                        xml.addElement("liste", dict);
-                        String first = "", second="note";
+                        dict.put(getString(R.string.prefMaxPoints), getIntent().getStringExtra(getString(R.string.prefMaxPoints)));
+                        dict.put(getString(R.string.prefQuarterMarks), String.valueOf(getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true)));
+                        dict.put(getString(R.string.prefHalfPoints), String.valueOf(getIntent().getBooleanExtra(getString(R.string.halfPoints), true)));
+                        dict.put(getString(R.string.prefDictMode), String.valueOf(getIntent().getBooleanExtra(getString(R.string.prefDictMode), true)));
+                        xml.addElement(getString(R.string.expXMLList), dict);
+                        String first = "", second=getString(R.string.expXMLMark);
                         for(String item : lsCorrect) {
                             if(item.contains(";")) {
                                 dict = new HashMap<>();
                                 dict.put(first, item.split(";")[0].trim());
                                 dict.put(second, item.split(";")[1].trim());
-                                xml.addSubElement("element", dict, "liste");
+                                xml.addSubElement(getString(R.string.expXMLElem), dict, getString(R.string.expXMLList));
                             } else {
-                                if(item.contains("Fehler")) {
-                                    first = "fehler";
+                                if(item.contains(getString(R.string.mistakes))) {
+                                    first = getString(R.string.expXMLMistakes);
                                 } else {
-                                    first = "punkte";
+                                    first = getString(R.string.expXMLPoints);
                                 }
                             }
                         }
                         xml.save(path);
-                        CharSequence text = String.valueOf("Export in Datei '"+ path +"' erfolgreich!");
-                        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-                        toast.show();
+                        clsHelper.createToast(getApplicationContext(), getString(R.string.infoExportSuccessfully));
                     } catch(Exception ex) {
-                        CharSequence text = String.valueOf("Fehler beim exportieren der Liste!");
-                        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-                        toast.show();
+                        clsHelper.createToast(getApplicationContext(), getString(R.string.errorCantCreateFile));
                     }
                 }
 
@@ -179,15 +169,13 @@ public class actExport extends AppCompatActivity {
                     BufferedReader br = new BufferedReader(new FileReader(file));
                     String line;
                     while ((line = br.readLine()) != null) {
-                        txt.append(line.replace(";", ":"));
+                        txt.append(line.replace(getString(R.string.sysSplitChar), ":"));
                         txt.append('\n');
                     }
                     br.close();
                     txtContent.setText(txt.toString());
                 } catch (IOException ex) {
-                    CharSequence error = ex.toString();//String.valueOf("Fehler beim exportieren der Liste!");
-                    Toast toast = Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG);
-                    toast.show();
+                    clsHelper.createToast(getApplicationContext(), getString(R.string.errorCantCreateFile));
                 }
             }
         });
@@ -195,19 +183,13 @@ public class actExport extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menexport, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menBack) {
             this.finish();
             return true;
@@ -220,15 +202,19 @@ public class actExport extends AppCompatActivity {
     }
 
     private void updateBackgrounds() {
-        SharedPreferences sharedPref = getBaseContext().getSharedPreferences("NOTPUNKTLIST", Context.MODE_PRIVATE);
         final int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            rlMain.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kontrollzentrum", R.drawable.light_bg_texture_01)));
-            txtContent.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Hintergrund", R.drawable.cold_bg_texture_01)));
+            rlMain.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, pref.getCTRLCenter()));
+            txtContent.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, pref.getBackground()));
         } else {
-            rlMain.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Kontrollzentrum", R.drawable.light_bg_texture_01)));
-            txtContent.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt("Hintergrund", R.drawable.cold_bg_texture_01)));
+            dangerousBG();
         }
-        txtPath.setText(sharedPref.getString("Pfad", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()));
+        txtPath.setText(pref.getPath());
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void dangerousBG() {
+        rlMain.setBackground(clsHelper.getBitmapDrawable(this, pref.getCTRLCenter()));
+        txtContent.setBackground(clsHelper.getBitmapDrawable(this, pref.getBackground()));
     }
 }

@@ -3,15 +3,13 @@ package dominicjoas.dev.notpunktlist.activities;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import java.util.List;
 
 import dominicjoas.dev.notpunktlist.R;
 import dominicjoas.dev.notpunktlist.classes.clsMarkList;
+import dominicjoas.dev.notpunktlist.classes.clsSharedPreference;
 
 /**
  * Implementation of App Widget functionality.
@@ -20,8 +18,8 @@ public class widMain extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        for (int i = 0; i < appWidgetIds.length; ++i) {
-            updateAppWidget(context,appWidgetManager, appWidgetIds[i]);
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
@@ -46,30 +44,26 @@ public class widMain extends AppWidgetProvider {
     }
 
     private static String[] getList(Context ctx) {
-        SharedPreferences pref =  ctx.getSharedPreferences("NOTPUNKTLIST",Context.MODE_PRIVATE);
-        double maxPoints = Double.parseDouble(pref.getString(String.valueOf(R.string.maximumPoints), "20"));
-        boolean quarterMarks = pref.getBoolean(String.valueOf(R.string.quarterMarks), false);
-        boolean halfPoints = pref.getBoolean(String.valueOf(R.string.halfPoints), false);
-        boolean dictatMode = pref.getBoolean(String.valueOf(R.string.dictatMode), false);
-        clsMarkList list = new clsMarkList(maxPoints, !halfPoints, !quarterMarks);
+        clsSharedPreference pref =  new clsSharedPreference(ctx);
+        clsMarkList list = new clsMarkList(Double.parseDouble(pref.getMaxPoints()), !pref.getHalfPoints(), !pref.getQuarterMarks());
         List<String> ls = list.generateList();
         String[] text = new String[2];
-        if(dictatMode) {
-            text[0] = "Fehler              Note\n";
+        if(pref.getDictMode()) {
+            text[0] = ctx.getString(R.string.mistakes) + "              " + ctx.getString(R.string.mark) + "\n";
         } else {
-            text[0] = "Punkte              Note\n";
+            text[0] = ctx.getString(R.string.points) + "              " + ctx.getString(R.string.mark) + "\n";
         }
         text[1] = "";
         for(String item : ls) {
-            String before = item.split(";")[0];
-            String after = item.split(";")[1];
-            if(dictatMode) {
-                before = String.valueOf(maxPoints - Double.parseDouble(before));
+            String before = item.split(ctx.getString(R.string.sysSplitChar))[0];
+            String after = item.split(ctx.getString(R.string.sysSplitChar))[1];
+            if(pref.getDictMode()) {
+                before = String.valueOf(Double.parseDouble(pref.getMaxPoints()) - Double.parseDouble(before));
             }
-            if(dictatMode) {
-                text[1] += "Fehler: " + before + " | Note:" + after + " ||";
+            if(pref.getDictMode()) {
+                text[1] += ctx.getString(R.string.mistakes) + ": " + before + " | " + ctx.getString(R.string.mark) + ":" + after + " ||";
             } else {
-                text[1] += "Punkte: " + before + " | Note:" + after + " ||";
+                text[1] += ctx.getString(R.string.points) + ": " + before + " | " + ctx.getString(R.string.mark) + ":" + after + " ||";
             }
         }
         return text;
