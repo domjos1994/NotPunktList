@@ -3,4 +3,5 @@
     <color name="textColor">#fff</color>
     <color name="hintColor">#555</color>
     <color name="separatorColor">#999</color>
+    <color name="darkColor">#000</color>
 </resources>

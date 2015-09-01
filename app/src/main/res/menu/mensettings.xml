@@ -4,4 +4,6 @@
     tools:context="dominicjoas.dev.notpunktlist.activities.actSettings">
     <item android:id="@+id/menBack" android:title="Zurück"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/menClose" android:title="Beenden"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

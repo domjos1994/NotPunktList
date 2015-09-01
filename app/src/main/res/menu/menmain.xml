@@ -10,4 +10,9 @@
         android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/menCloseApp" android:title="@string/close"
         android:orderInCategory="100" app:showAsAction="never"/>
+    <item android:id="@+id/menSearch"
+        android:icon="@drawable/search"
+        android:title="Search"
+        app:showAsAction="ifRoom"  />
+
 </menu>
