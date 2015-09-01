@@ -3,7 +3,7 @@ Dies ist eine Android-App zum Erstellen von Notenlisten.<br>
 Hinweis: Man kann die Basisinformationen im Menu speichern.
 
 ## Export
-Export einer Notenlist ist in folgende Formate möglich:<br>
+Export einer Notenliste ist in folgende Formate möglich:<br>
 <br>
 <ul>
   <li>TXT</li>
