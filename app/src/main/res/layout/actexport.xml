@@ -72,7 +72,7 @@
         android:inputType="textMultiLine"
         android:id="@+id/txtContent"
         android:editable="false"
-        android:textColor="@color/textColor"
+        android:textColor="@color/darkColor"
         android:layout_below="@+id/scrollView"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

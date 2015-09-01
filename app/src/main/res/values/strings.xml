@@ -5,10 +5,6 @@
     <string name="SearchButtonDescription">Search-Button</string>
     <string name="SearchTextHint">Note</string>
     <string name="searchAfter">Suche nach:</string>
-    <string name="dictatMode">Diktat-Modus</string>
-    <string name="halfPoints">halbe Punkte</string>
-    <string name="tenthPoints">zehntel Noten</string>
-    <string name="quarterMarks">viertel Noten</string>
     <string name="defaultValue">20</string>
     <string name="maximumPoints">Maximale Punktzahl</string>
     <string name="expandButton">Expansion Button</string>
@@ -23,4 +19,53 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="title_activity_act_settings">Optionen</string>
+
+
+    <string name="mistakes">Fehler</string>
+    <string name="mark">Note</string>
+    <string name="points">Punkte</string>
+    <string name="countMistakes">Anzahl der Fehler</string>
+    <string name="countPoints">Anzahl der Punkte</string>
+    <string name="maxMistakes">Maximale Fehleranzahl</string>
+    <string name="maxPoints">Maximale Punktzahl</string>
+    <string name="tenthPoints">zehntel Noten</string>
+    <string name="quarterMarks">viertel Noten</string>
+    <string name="halfPoints">halbe Punkte</string>
+    <string name="dictatMode">Diktat-Modus</string>
+    <string name="settings">Einstellungen</string>
+
+    <string name="expTitle">NotPunktList - Export</string>
+    <string name="expFilePart">export</string>
+    <string name="expXMLRoot">notpunktlistexport</string>
+    <string name="expXMLList">liste</string>
+    <string name="expXMLElem">element</string>
+    <string name="expXMLMistakes">fehler</string>
+    <string name="expXMLPoints">punkte</string>
+    <string name="expXMLMark">noten</string>
+
+    <string name="infoSettingsSaved">Einstellungen wurden gespeichert!</string>
+    <string name="infoOptionsSaved">Optionen wurden gespeichert!</string>
+    <string name="infoExportSuccessfully">Notenliste wurde erfolgreich exportiert!</string>
+
+    <string name="errorProblemsWithSettings">Es gab Probleme beim Laden der Einstellungen!</string>
+    <string name="errorNumberTooBig">Die Zahl ist zu groß!</string>
+    <string name="errorSomethingWentWrong">Es ist etwas schief gelaufen!</string>
+    <string name="errorSearchFailed">Die Suchangabe ist fehlerhaft!</string>
+    <string name="errorCantCreateFolders">Verzeichnis konnte nicht erstellt werden!</string>
+    <string name="errorCantCreateFile">Datei konnte nicht erstellt werden!</string>
+    <string name="errorPathDontExist">Pfad existiert nicht!</string>
+    <string name="errorNoBackgroundChosen">Sie haben noch keinen Hintergrund ausgewählt!</string>
+
+    <string name="prefBackground">Hintergrund</string>
+    <string name="prefHeader">Kopfbereich</string>
+    <string name="prefCTRLCenter">Kontrollzentrum</string>
+    <string name="prefPath">Pfad</string>
+    <string name="prefMaxPoints">maxPoints</string>
+    <string name="prefQuarterMarks">quarterMarks</string>
+    <string name="prefHalfPoints">halfPoints</string>
+    <string name="prefDictMode">dictMode</string>
+
+    <string name="sysCharset">UTF-8</string>
+    <string name="sysSharedPref">NOTPUNKTLIST</string>
+    <string name="sysSplitChar">;</string>
 </resources>

@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="dominicjoas.dev.notpunktlist.activities.actExport"
-    android:background="@drawable/dark_bg_texture_04">
+    android:background="@drawable/dark_bg_texture_04"
+    android:id="@+id/rlMain">
 
 
     <EditText
