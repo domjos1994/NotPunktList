@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/textColor">
             <TextView
-                android:text="Maximale Punktzahl"
+                android:text="@string/maxPoints"
                 android:layout_span="18"
                 android:id="@+id/lblMaxPoints"
                 android:layout_gravity="start|center"
@@ -48,15 +48,17 @@
             <EditText
                 android:layout_span="16"
                 android:id="@+id/txtMaxPoints"
-                android:text="20"
+                android:text="@string/actMainDefaultValue"
                 android:background="@color/textColor"
                 android:layout_gravity="center_vertical"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:textColor="#000"
                 android:singleLine="true"
+                android:inputType="number"
                 android:imeOptions="actionDone"/>
             <ImageButton
+                android:contentDescription="@string/actMainExpand"
                 android:layout_height="40dp"
                 android:layout_width="40dp"
                 android:id="@+id/cmdOpenClose"
@@ -139,7 +141,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/searchAfter"
+                    android:text="@string/actMainSearchAfter"
                     android:textSize="12sp"
                     android:gravity="center_vertical"
                     style="@style/TextColor"
@@ -147,7 +149,7 @@
                 <RadioButton
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="Note"
+                    android:text="@string/mark"
                     android:id="@+id/optMarks"
                     android:layout_gravity="center"
                     android:gravity="center_vertical"
@@ -157,7 +159,7 @@
                 <RadioButton
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="Punkte"
+                    android:text="@string/points"
                     android:id="@+id/optPoints"
                     android:textSize="12sp"
                     android:gravity="center_vertical"
@@ -171,7 +173,7 @@
             android:layout_width="fill_parent">
             <EditText
                 android:id="@+id/txtSearch"
-                android:hint="@string/SearchTextHint"
+                android:hint="@string/mark"
                 android:textColorHint="@color/hintColor"
                 android:layout_span="34"
                 android:background="@color/textColor"
@@ -184,7 +186,7 @@
             <ImageButton
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:contentDescription="@string/SearchButtonDescription"
+                android:contentDescription="@string/actMainSearchButtonDescription"
                 android:id="@+id/cmdSearch"
                 android:src="@drawable/search"
                 android:layout_gravity="end"

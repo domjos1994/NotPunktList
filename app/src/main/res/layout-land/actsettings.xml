@@ -27,6 +27,7 @@
                     android:layout_span="32"/>
 
                 <ImageButton
+                    android:contentDescription="@string/actSettingsCurrent"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:id="@+id/cmdBackgrounds"
@@ -48,7 +49,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Speichern"
+                    android:text="@string/save"
                     android:id="@+id/cmdSave"
                     android:layout_span="40"/>
             </TableRow>
@@ -65,7 +66,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pfad zum Export-Verzeichnis"
+                    android:text="@string/actSettingsPathToExport"
                     android:id="@+id/lblPathToExport" />
             </TableRow>
             <TableRow
@@ -74,7 +75,9 @@
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtPath"/>
+                    android:id="@+id/txtPath"
+                    android:inputType="text"
+                    android:singleLine="true"/>
             </TableRow>
             <TableRow
                 android:layout_height="wrap_content"
@@ -82,7 +85,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pfad speichern"
+                    android:text="@string/actSettingsSavePath"
                     android:id="@+id/cmdSavePath"/>
             </TableRow>
             <TableRow
@@ -91,7 +94,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Zurück"
+                    android:text="@string/back"
                     android:id="@+id/cmdBack"/>
             </TableRow>
         </TableLayout>
