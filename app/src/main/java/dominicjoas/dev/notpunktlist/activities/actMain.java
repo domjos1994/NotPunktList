@@ -269,9 +269,17 @@ public class actMain extends AppCompatActivity {
             if (!txtSearch.getText().toString().equals("")) {
                 txtSearch.setText(txtSearch.getText().toString().replace(",", "."));
                 if (optPoints.isChecked()) {
-                    clsHelper.createToast(getApplicationContext(), String.valueOf(marks.findPoints(createList(), Double.parseDouble(txtSearch.getText().toString()))));
+                    if(chkDictatMode.isChecked()) {
+                        clsHelper.createInfoDialog(actMain.this, optPoints.getText().toString(), getString(R.string.mark) + " " + txtSearch.getText().toString() + " " + getString(R.string.sysEquals) + " " + String.valueOf(marks.findPoints(createList(), Double.parseDouble(txtSearch.getText().toString()))) + " " + getString(R.string.mistakes));
+                    } else {
+                        clsHelper.createInfoDialog(actMain.this, optPoints.getText().toString(), getString(R.string.mark) + " " + txtSearch.getText().toString() + " " + getString(R.string.sysEquals) + " " + String.valueOf(marks.findPoints(createList(), Double.parseDouble(txtSearch.getText().toString()))) + " " + getString(R.string.points));
+                    }
                 } else {
-                    clsHelper.createToast(getApplicationContext(), String.valueOf(marks.findMark(createList(), Double.parseDouble(txtSearch.getText().toString()))));
+                    if(chkDictatMode.isChecked()) {
+                        clsHelper.createInfoDialog(actMain.this, optMarks.getText().toString(), txtSearch.getText().toString() + " " + getString(R.string.mistakes) + " " + getString(R.string.sysEquals) + " " + getString(R.string.mark) + " " + String.valueOf(marks.findMark(createList(), Double.parseDouble(txtSearch.getText().toString()))));
+                    } else {
+                        clsHelper.createInfoDialog(actMain.this, optMarks.getText().toString(), txtSearch.getText().toString() + " " + getString(R.string.points) + " " + getString(R.string.sysEquals) + " " + getString(R.string.mark) + " " + String.valueOf(marks.findMark(createList(), Double.parseDouble(txtSearch.getText().toString()))));
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -279,7 +287,7 @@ public class actMain extends AppCompatActivity {
         }
     }
 
-    private void closeSoftKeyBoard() {
+    private void closeSoftKeyBoard(){
         try {
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -323,7 +331,6 @@ public class actMain extends AppCompatActivity {
                 lvHeader.setAdapter(adapterHeader);
                 return lsMarks;
             } catch(Exception ex) {
-                System.out.println(ex.toString());
                 adapter.clear();
                 adapterHeader.clear();
                 return null;

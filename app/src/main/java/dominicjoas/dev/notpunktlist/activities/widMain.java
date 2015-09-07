@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.widget.RemoteViews;
 
+import java.util.Collections;
 import java.util.List;
 
 import dominicjoas.dev.notpunktlist.R;
@@ -47,6 +48,7 @@ public class widMain extends AppWidgetProvider {
         clsSharedPreference pref =  new clsSharedPreference(ctx);
         clsMarkList list = new clsMarkList(Double.parseDouble(pref.getMaxPoints()), !pref.getHalfPoints(), !pref.getQuarterMarks());
         List<String> ls = list.generateList();
+        Collections.reverse(ls);
         String[] text = new String[2];
         if(pref.getDictMode()) {
             text[0] = ctx.getString(R.string.mistakes) + "              " + ctx.getString(R.string.mark) + "\n";
