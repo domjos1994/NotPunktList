@@ -1,6 +1,9 @@
 package dominicjoas.dev.notpunktlist.classes;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Shader;
@@ -47,5 +50,13 @@ public class clsHelper {
     public static void createToast(Context ctx, String value) {
         Toast toast = Toast.makeText(ctx, value, Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    public static void createInfoDialog(Context ctx, String title, String value) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(ctx.getString(R.string.actMainSearchAfter) + " " + title);
+        builder.setIcon(R.drawable.search);
+        builder.setMessage(value);
+        builder.create().show();
     }
 }
