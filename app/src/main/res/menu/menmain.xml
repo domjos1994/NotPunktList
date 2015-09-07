@@ -2,17 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="dominicjoas.dev.notpunktlist.activities.actMain">
-    <item android:id="@+id/menSaveSettings" android:title="@string/saveSettings"
+    <item android:id="@+id/menSaveSettings" android:title="@string/actMainSaveSettings"
         android:orderInCategory="100" app:showAsAction="never"/>
-    <item android:id="@+id/menExport" android:title="@string/exportList"
+    <item android:id="@+id/menExport" android:title="@string/actMainExportList"
         android:orderInCategory="100" app:showAsAction="never"/>
-    <item android:id="@+id/menOptions" android:title="Optionen"
+    <item android:id="@+id/menOptions" android:title="@string/actSettingsTitle"
         android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/menCloseApp" android:title="@string/close"
         android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/menSearch"
         android:icon="@drawable/search"
-        android:title="Search"
+        android:title="@string/search"
         app:showAsAction="ifRoom"  />
 
 </menu>

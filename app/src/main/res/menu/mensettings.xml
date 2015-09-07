@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="dominicjoas.dev.notpunktlist.activities.actSettings">
-    <item android:id="@+id/menBack" android:title="Zurück"
+    <item android:id="@+id/menBack" android:title="@string/back"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/menClose" android:title="Beenden"
+    <item android:id="@+id/menClose" android:title="@string/close"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>
