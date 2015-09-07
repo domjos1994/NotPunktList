@@ -1,26 +1,4 @@
 <resources>
-    <string name="app_name">NotPunktList</string>
-    <string name="saveSettings">Einstellungen speichern</string>
-    <string name="close">Beenden</string>
-    <string name="SearchButtonDescription">Search-Button</string>
-    <string name="SearchTextHint">Note</string>
-    <string name="searchAfter">Suche nach:</string>
-    <string name="defaultValue">20</string>
-    <string name="maximumPoints">Maximale Punktzahl</string>
-    <string name="expandButton">Expansion Button</string>
-    <string name="tooBig">Zahl zu groß!</string>
-    <string name="searchFailed">Die Suchangabe ist fehlerhaft!</string>
-    <string name="maximumMistakes">Maximale Fehleranzahl</string>
-    <string name="title_activity_act_export">Notenliste exportieren</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="exportList">Liste Exportieren</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="title_activity_act_settings">Optionen</string>
-
-
     <string name="mistakes">Fehler</string>
     <string name="mark">Note</string>
     <string name="points">Punkte</string>
@@ -33,6 +11,11 @@
     <string name="halfPoints">halbe Punkte</string>
     <string name="dictatMode">Diktat-Modus</string>
     <string name="settings">Einstellungen</string>
+    <string name="back">Zurück</string>
+    <string name="save">Speichern</string>
+    <string name="search">Suche</string>
+    <string name="close">Beenden</string>
+    <string name="okay">OKAY</string>
 
     <string name="expTitle">NotPunktList - Export</string>
     <string name="expFilePart">export</string>
@@ -65,7 +48,31 @@
     <string name="prefHalfPoints">halfPoints</string>
     <string name="prefDictMode">dictMode</string>
 
+    <string name="sysTitle">NotPunktList</string>
     <string name="sysCharset">UTF-8</string>
     <string name="sysSharedPref">NOTPUNKTLIST</string>
     <string name="sysSplitChar">;</string>
+    <string name="sysEquals">entspricht</string>
+    <string name="sysDown">runter</string>
+
+    <string name="actMainDefaultValue">20</string>
+    <string name="actMainExpand">Einstellungen anzeigen</string>
+    <string name="actMainSaveSettings">Einstellungen speichern</string>
+    <string name="actMainSearchButtonDescription">Search-Button</string>
+    <string name="actMainSearchAfter">Suche nach:</string>
+    <string name="actMainExportList">Liste Exportieren</string>
+
+    <string name="actExportTitle">Notenliste exportieren</string>
+    <string name="actExportExport">Exportieren</string>
+    <string name="actExportToText">in Textdatei exportieren</string>
+    <string name="actExportToCSV">in CSV exportieren</string>
+    <string name="actExportToXML">in XML exportieren</string>
+
+    <string name="actSettingsTitle">Optionen</string>
+    <string name="actSettingsCurrent">aktuelle Farbe</string>
+    <string name="actSettingsSavePath">Pfad speichern</string>
+    <string name="actSettingsPathToExport">Pfad zum Export-Verzeichnis</string>
+
+    <string name="widMainTitle">NotPunktList - Widget</string>
+    <string name="widDetailedTitle">NotPunktList - Detailliert</string>
 </resources>
