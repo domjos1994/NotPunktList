@@ -53,6 +53,7 @@
     <string name="sysSharedPref">NOTPUNKTLIST</string>
     <string name="sysSplitChar">;</string>
     <string name="sysEquals">entspricht</string>
+    <string name="sysEquals2">entsprechen</string>
     <string name="sysDown">runter</string>
 
     <string name="actMainDefaultValue">20</string>

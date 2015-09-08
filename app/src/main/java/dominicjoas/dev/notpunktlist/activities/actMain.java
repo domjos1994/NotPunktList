@@ -270,15 +270,15 @@ public class actMain extends AppCompatActivity {
                 txtSearch.setText(txtSearch.getText().toString().replace(",", "."));
                 if (optPoints.isChecked()) {
                     if(chkDictatMode.isChecked()) {
-                        clsHelper.createInfoDialog(actMain.this, optPoints.getText().toString(), getString(R.string.mark) + " " + txtSearch.getText().toString() + " " + getString(R.string.sysEquals) + " " + String.valueOf(marks.findPoints(createList(), Double.parseDouble(txtSearch.getText().toString()))) + " " + getString(R.string.mistakes));
+                        clsHelper.createInfoDialog(actMain.this, optPoints.getText().toString(), "Für " + getString(R.string.mark) + " " + txtSearch.getText().toString() + " braucht man " + String.valueOf(marks.findPoints(createList(), Double.parseDouble(txtSearch.getText().toString()))) + " " + getString(R.string.mistakes));
                     } else {
-                        clsHelper.createInfoDialog(actMain.this, optPoints.getText().toString(), getString(R.string.mark) + " " + txtSearch.getText().toString() + " " + getString(R.string.sysEquals) + " " + String.valueOf(marks.findPoints(createList(), Double.parseDouble(txtSearch.getText().toString()))) + " " + getString(R.string.points));
+                        clsHelper.createInfoDialog(actMain.this, optPoints.getText().toString(), "Für " + getString(R.string.mark) + " " + txtSearch.getText().toString() + " braucht man " + String.valueOf(marks.findPoints(createList(), Double.parseDouble(txtSearch.getText().toString()))) + " " + getString(R.string.points));
                     }
                 } else {
                     if(chkDictatMode.isChecked()) {
-                        clsHelper.createInfoDialog(actMain.this, optMarks.getText().toString(), txtSearch.getText().toString() + " " + getString(R.string.mistakes) + " " + getString(R.string.sysEquals) + " " + getString(R.string.mark) + " " + String.valueOf(marks.findMark(createList(), Double.parseDouble(txtSearch.getText().toString()))));
+                        clsHelper.createInfoDialog(actMain.this, optMarks.getText().toString(), "Für " + txtSearch.getText().toString() + " " + getString(R.string.mistakes) + " bekommt man " + getString(R.string.mark) + " " + String.valueOf(marks.findMark(createList(), Double.parseDouble(txtSearch.getText().toString()))));
                     } else {
-                        clsHelper.createInfoDialog(actMain.this, optMarks.getText().toString(), txtSearch.getText().toString() + " " + getString(R.string.points) + " " + getString(R.string.sysEquals) + " " + getString(R.string.mark) + " " + String.valueOf(marks.findMark(createList(), Double.parseDouble(txtSearch.getText().toString()))));
+                        clsHelper.createInfoDialog(actMain.this, optMarks.getText().toString(), "Für " + txtSearch.getText().toString() + " " + getString(R.string.points) + " bekommt man " + getString(R.string.mark) + " " + String.valueOf(marks.findMark(createList(), Double.parseDouble(txtSearch.getText().toString()))));
                     }
                 }
             }
