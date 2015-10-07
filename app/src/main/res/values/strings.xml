@@ -1,7 +1,10 @@
 <resources>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="mistakes">Fehler</string>
     <string name="mark">Note</string>
     <string name="points">Punkte</string>
+    <string name="view">Ansicht</string>
     <string name="countMistakes">Anzahl der Fehler</string>
     <string name="countPoints">Anzahl der Punkte</string>
     <string name="maxMistakes">Maximale Fehleranzahl</string>
@@ -76,4 +79,39 @@
 
     <string name="widMainTitle">NotPunktList - Widget</string>
     <string name="widDetailedTitle">NotPunktList - Detailliert</string>
+    <string name="expanded">erweiterte Einstellungen</string>
+    <string name="mode">Modus</string>
+    <string name="bestAt">Beste Note ab</string>
+    <string name="worstAt">Schlechteste Note ab</string>
+    <string name="userpoints">userpoint</string>
+    <string name="usermark">usermark</string>
+
+    <string-array name="marksMultiplier">
+        <item>zehntel Noten</item>
+        <item>viertel Noten</item>
+        <item>ganze Noten</item>
+        <item>benannte Noten</item>
+        <item>Abiturpunkte</item>
+    </string-array>
+
+    <string-array name="pointsMultiplier">
+        <item>viertel Punkte</item>
+        <item>halbe Punkte</item>
+        <item>ganze Punkte</item>
+    </string-array>
+
+    <string-array name="view">
+        <item>beste Note zuerst</item>
+        <item>schlechteste Note zuerst</item>
+        <item>maximale Punktanzahl zuerst</item>
+        <item>minimale Punktanzahl zuerst</item>
+    </string-array>
+
+    <string-array name="mode">
+        <item>lineare Notenliste</item>
+        <item>exponentielle Notenliste</item>
+        <item>Notenliste mit Knicks</item>
+        <item>Notenliste nach IHK</item>
+        <item>Notenliste mit Punkte</item>
+    </string-array>
 </resources>
