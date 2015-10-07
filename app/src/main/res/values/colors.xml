@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="darkBlue">#000080</color>
+    <color name="white">#ffffff</color>
+    <color name="textColor">#fff</color>
+    <color name="hintColor">#555</color>
+    <color name="separatorColor">#999</color>
+    <color name="darkColor">#000</color>
+</resources>
