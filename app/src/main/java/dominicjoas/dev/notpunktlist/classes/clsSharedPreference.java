@@ -28,22 +28,76 @@ public class clsSharedPreference {
         return preference.getString(this.ctx.getString(R.string.prefMaxPoints), "20");
     }
 
-    public void setHalfPoints(boolean halfpoints) {
+    public void setPoints(long index) {
         implementEditor();
-        editor.putBoolean(this.ctx.getString(R.string.prefHalfPoints), halfpoints);
+        editor.putLong(this.ctx.getString(R.string.points), index);
     }
 
-    public boolean getHalfPoints() {
-        return preference.getBoolean(this.ctx.getString(R.string.prefHalfPoints), false);
+    public long getPoints() {
+        return preference.getLong(this.ctx.getString(R.string.points), 0);
     }
 
-    public void setQuarterMarks(boolean quarterMarks) {
+    public void setMarks(long index) {
         implementEditor();
-        editor.putBoolean(this.ctx.getString(R.string.prefQuarterMarks), quarterMarks);
+        editor.putLong(this.ctx.getString(R.string.mark), index);
     }
 
-    public boolean getQuarterMarks() {
-        return preference.getBoolean(this.ctx.getString(R.string.prefQuarterMarks), false);
+    public long getMarks() {
+        return preference.getLong(this.ctx.getString(R.string.mark), 0);
+    }
+
+    public void setViews(long index) {
+        implementEditor();
+        editor.putLong(this.ctx.getString(R.string.view), index);
+    }
+
+    public long getViews() {
+        return preference.getLong(this.ctx.getString(R.string.view), 0);
+    }
+
+    public void setMode(long index) {
+        implementEditor();
+        editor.putLong(this.ctx.getString(R.string.mode), index);
+    }
+
+    public long getMode() {
+        return preference.getLong(this.ctx.getString(R.string.mode), 0);
+    }
+
+    public void setBestMarkAt(float bestMark) {
+        implementEditor();
+        editor.putFloat(this.ctx.getString(R.string.bestAt), bestMark);
+    }
+
+    public float getBestMarkAt() {
+        return preference.getFloat(this.ctx.getString(R.string.bestAt), Float.parseFloat(preference.getString(this.ctx.getString(R.string.prefMaxPoints), "20")));
+    }
+
+    public void setWorstMarkAt(float worstMark) {
+        implementEditor();
+        editor.putFloat(this.ctx.getString(R.string.worstAt), worstMark);
+    }
+
+    public float getWorstMarkAt() {
+        return preference.getFloat(this.ctx.getString(R.string.worstAt), 0.0F);
+    }
+
+    public void setUserPoint(float points) {
+        implementEditor();
+        editor.putFloat(this.ctx.getString(R.string.userpoints), points);
+    }
+
+    public float getUserPoint() {
+        return preference.getFloat(this.ctx.getString(R.string.userpoints), Float.parseFloat(preference.getString(this.ctx.getString(R.string.prefMaxPoints), "20"))/2);
+    }
+
+    public void setUserMark(float mark) {
+        implementEditor();
+        editor.putFloat(this.ctx.getString(R.string.usermark), mark);
+    }
+
+    public float getUserMark() {
+        return preference.getFloat(this.ctx.getString(R.string.usermark), 3.5F);
     }
 
     public void setDictMode(boolean dictMode) {

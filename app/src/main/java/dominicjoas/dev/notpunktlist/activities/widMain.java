@@ -7,6 +7,7 @@ import android.widget.RemoteViews;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import dominicjoas.dev.notpunktlist.R;
 import dominicjoas.dev.notpunktlist.classes.clsMarkList;
@@ -46,9 +47,8 @@ public class widMain extends AppWidgetProvider {
 
     private static String[] getList(Context ctx) {
         clsSharedPreference pref =  new clsSharedPreference(ctx);
-        clsMarkList list = new clsMarkList(Double.parseDouble(pref.getMaxPoints()), !pref.getHalfPoints(), !pref.getQuarterMarks());
-        List<String> ls = list.generateList();
-        Collections.reverse(ls);
+        clsMarkList list = new clsMarkList(Integer.parseInt(pref.getMaxPoints()));
+        Map<Double, Double> ls = list.generateList(clsMarkList.Sorting.bestMarkFirst, clsMarkList.Mode.linear);
         String[] text = new String[2];
         if(pref.getDictMode()) {
             text[0] = ctx.getString(R.string.mistakes) + "              " + ctx.getString(R.string.mark) + "\n";
@@ -56,9 +56,9 @@ public class widMain extends AppWidgetProvider {
             text[0] = ctx.getString(R.string.points) + "              " + ctx.getString(R.string.mark) + "\n";
         }
         text[1] = "";
-        for(String item : ls) {
-            String before = item.split(ctx.getString(R.string.sysSplitChar))[0];
-            String after = item.split(ctx.getString(R.string.sysSplitChar))[1];
+        for(double key : ls.keySet()) {
+            String before = String.valueOf(key);
+            String after = String.valueOf(ls.get(key));
             if(pref.getDictMode()) {
                 before = String.valueOf(Double.parseDouble(pref.getMaxPoints()) - Double.parseDouble(before));
             }
