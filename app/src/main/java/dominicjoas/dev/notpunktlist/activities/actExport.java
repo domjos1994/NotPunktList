@@ -60,26 +60,26 @@ public class actExport extends AppCompatActivity {
         cmdExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clsMarkList list = new clsMarkList(Double.parseDouble(getIntent().getStringExtra(getString(R.string.prefMaxPoints))), !getIntent().getBooleanExtra(getString(R.string.prefHalfPoints), true), !getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true));
-                List<String> marklist = list.generateList();
+                clsMarkList list = new clsMarkList(Integer.parseInt(getIntent().getStringExtra(getString(R.string.prefMaxPoints))));
+                Map<Double, Double> marklist = list.generateList(clsMarkList.Sorting.bestMarkFirst, clsMarkList.Mode.linear);
                 List<String> lsCorrect = new ArrayList<>();
                 if(getIntent().getBooleanExtra(getString(R.string.prefDictMode), true)) {
                     lsCorrect.add(getString(R.string.mistakes) + "             " + getString(R.string.mark));
-                    for(String current : marklist) {
-                        String cur = String.valueOf(Double.parseDouble(getIntent().getStringExtra(getString(R.string.prefMaxPoints))) - Double.parseDouble(current.split(getString(R.string.sysSplitChar))[0]));
+                    for(Double key : marklist.keySet()) {
+                        String cur = String.valueOf(Double.parseDouble(getIntent().getStringExtra(getString(R.string.prefMaxPoints))) - key);
                         for(int i = cur.length(); i<=20;i++) {
                             cur += " ";
                         }
-                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + current.split(getString(R.string.sysSplitChar))[1]);
+                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + marklist.get(key));
                     }
                 } else {
                     lsCorrect.add(getString(R.string.points) + "             " + getString(R.string.mark));
-                    for(String current : marklist) {
-                        String cur = current.split(getString(R.string.sysSplitChar))[0];
+                    for(Double key : marklist.keySet()) {
+                        String cur = String.valueOf(key);
                         for(int i = cur.length(); i<=20;i++) {
                             cur += " ";
                         }
-                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + current.split(getString(R.string.sysSplitChar))[1]);
+                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + marklist.get(key));
                     }
                 }
                 String path = "";
