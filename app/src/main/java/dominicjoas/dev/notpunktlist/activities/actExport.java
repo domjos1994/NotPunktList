@@ -99,7 +99,7 @@ public class actExport extends AppCompatActivity {
                         writer.println(getString(R.string.expTitle));
                         writer.println(getString(R.string.settings));
                         writer.println(getString(R.string.maxPoints) + ":\t\t" + getIntent().getStringExtra(getString(R.string.prefMaxPoints)));
-                        writer.println(getString(R.string.quarterMarks) + ":\t\t\t" + getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true));
+                        writer.println(getString(R.string.quarterMarks) + ":\t\t\t" + getIntent().getIntExtra(pref.PREFCUSTOMMARK, 0));
                         writer.println(getString(R.string.halfPoints) + ":\t\t\t" + getIntent().getBooleanExtra(getString(R.string.halfPoints), true));
                         writer.println(getString(R.string.dictatMode) + ":\t\t\t" + getIntent().getBooleanExtra(getString(R.string.prefDictMode), true));
                         for(String item : lsCorrect) {
@@ -117,7 +117,7 @@ public class actExport extends AppCompatActivity {
                         writer.println(getString(R.string.expTitle));
                         writer.println(getString(R.string.settings));
                         writer.println(getString(R.string.maxPoints) + getString(R.string.sysSplitChar) + getIntent().getStringExtra(getString(R.string.prefMaxPoints)));
-                        writer.println(getString(R.string.quarterMarks) + getString(R.string.sysSplitChar) + getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true));
+                        writer.println(getString(R.string.quarterMarks) + getString(R.string.sysSplitChar) + getIntent().getIntExtra(pref.PREFMARKMODE , 0));
                         writer.println(getString(R.string.halfPoints) + getString(R.string.sysSplitChar) + getIntent().getBooleanExtra(getString(R.string.halfPoints), true));
                         writer.println(getString(R.string.dictatMode) + getString(R.string.sysSplitChar) + getIntent().getBooleanExtra(getString(R.string.prefDictMode), true));
                         for(String item : lsCorrect) {
@@ -134,8 +134,8 @@ public class actExport extends AppCompatActivity {
                         path = txtPath.getText().toString() + "/" +  getString(R.string.expFilePart) + "_" + new Date().getTime() + ".xml";
                         Map<String, String> dict = new HashMap<>();
                         dict.put(getString(R.string.prefMaxPoints), getIntent().getStringExtra(getString(R.string.prefMaxPoints)));
-                        dict.put(getString(R.string.prefQuarterMarks), String.valueOf(getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true)));
-                        dict.put(getString(R.string.prefHalfPoints), String.valueOf(getIntent().getBooleanExtra(getString(R.string.halfPoints), true)));
+                        dict.put(pref.PREFMARKMODE , String.valueOf(getIntent().getBooleanExtra(pref.PREFMARKMODE, true)));
+                        dict.put(pref.PREFPOINTMODE , String.valueOf(getIntent().getBooleanExtra(getString(R.string.halfPoints), true)));
                         dict.put(getString(R.string.prefDictMode), String.valueOf(getIntent().getBooleanExtra(getString(R.string.prefDictMode), true)));
                         xml.addElement(getString(R.string.expXMLList), dict);
                         String first = "", second=getString(R.string.expXMLMark);

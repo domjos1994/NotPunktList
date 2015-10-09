@@ -47,7 +47,7 @@ public class widMain extends AppWidgetProvider {
 
     private static String[] getList(Context ctx) {
         clsSharedPreference pref =  new clsSharedPreference(ctx);
-        clsMarkList list = new clsMarkList(Integer.parseInt(pref.getMaxPoints()));
+        clsMarkList list = new clsMarkList(pref.getMaxPoints());
         Map<Double, Double> ls = list.generateList(clsMarkList.Sorting.bestMarkFirst, clsMarkList.Mode.linear);
         String[] text = new String[2];
         if(pref.getDictMode()) {
@@ -60,7 +60,7 @@ public class widMain extends AppWidgetProvider {
             String before = String.valueOf(key);
             String after = String.valueOf(ls.get(key));
             if(pref.getDictMode()) {
-                before = String.valueOf(Double.parseDouble(pref.getMaxPoints()) - Double.parseDouble(before));
+                before = String.valueOf((double)pref.getMaxPoints() - Double.parseDouble(before));
             }
             if(pref.getDictMode()) {
                 text[1] += ctx.getString(R.string.mistakes) + ": " + before + " | " + ctx.getString(R.string.mark) + ":" + after + " ||";

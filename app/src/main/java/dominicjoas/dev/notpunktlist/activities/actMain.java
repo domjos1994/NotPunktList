@@ -3,7 +3,6 @@ package dominicjoas.dev.notpunktlist.activities;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,28 +23,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
 
+import java.text.DecimalFormat;
+
 import dominicjoas.dev.notpunktlist.R;
+import dominicjoas.dev.notpunktlist.viewhelper.clsDrawCurrent;
+import dominicjoas.dev.notpunktlist.viewhelper.clsDrawDiagram;
 import dominicjoas.dev.notpunktlist.classes.clsHelper;
 import dominicjoas.dev.notpunktlist.classes.clsMarkList;
 import dominicjoas.dev.notpunktlist.classes.clsSharedPreference;
 import dominicjoas.dev.notpunktlist.viewhelper.MarkListViewHelper;
-import dominicjoas.dev.notpunktlist.viewhelper.clsSurface;
 
-public class actMain extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class actMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    RelativeLayout rlMain, rlDiagram;
+    RelativeLayout rlMain, rlDiagram, rlLineDiagram;
     TableLayout tblSettings;
-    ImageButton cmdExp, cmdSearch;
+    GridView lvMarkList, lvHeader;
+    TextView lblMaxPoints, lblPoints, lblBestMark, lblWorstMark;
     EditText txtMaxPoints, txtSearch, txtMark, txtPoints;
+    ImageButton cmdExp, cmdSearch;
     RadioButton optMarks, optPoints;
     CheckBox chkDictatMode;
-    GridView lvMarkList, lvHeader;
-    TextView lblMaxPoints, lblPoints;
     Spinner spMarks, spPoints, spViews, spMode;
     SeekBar sbBestAt, sbWorstAt;
     clsSharedPreference pref;
-    clsSurface surf;
+    clsDrawDiagram diagram;
+    clsDrawCurrent current;
 
     int tblHeight;
 
@@ -53,79 +55,112 @@ public class actMain extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actmain);
+
+        // Instantiate basic controls of the Main-Activity
+        // do not change that (it's for the drawer of the activity)
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Instantiate controls of the activity
+        rlMain = (RelativeLayout) findViewById(R.id.rlMain);
+        rlDiagram = (RelativeLayout) findViewById(R.id.rlDiagram);
+        rlLineDiagram = (RelativeLayout) findViewById(R.id.rlCurrentLine);
+        tblSettings = (TableLayout) findViewById(R.id.tblSettings);
+        if(getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            cmdExp = (ImageButton) findViewById(R.id.cmdOpenClose);
+        }
+        cmdSearch = (ImageButton) findViewById(R.id.cmdSearch);
+        txtMaxPoints = (EditText) findViewById(R.id.txtMaxPoints);
+        txtSearch = (EditText) findViewById(R.id.txtSearch);
+        spMarks = (Spinner) findViewById(R.id.spMarks);
+        spPoints = (Spinner) findViewById(R.id.spPoints);
+        optMarks = (RadioButton) findViewById(R.id.optMarks);
+        optPoints = (RadioButton) findViewById(R.id.optPoints);
+        spViews = (Spinner) findViewById(R.id.spView);
+        chkDictatMode = (CheckBox) findViewById(R.id.chkDictatMode);
+        lvMarkList = (GridView) findViewById(R.id.grdMarkList);
+        lvHeader = (GridView) findViewById(R.id.lvHeader);
+        lblMaxPoints = (TextView) findViewById(R.id.lblMaxPoints);
+        lblPoints = (TextView) findViewById(R.id.lblCurPoints);
+        lblBestMark = (TextView) findViewById(R.id.lblCurrentBestMark);
+        lblWorstMark = (TextView) findViewById(R.id.lblCurrentWorstMark);
+        spMode = (Spinner) findViewById(R.id.spMode);
+        sbBestAt = (SeekBar) findViewById(R.id.sbBestMark);
+        sbWorstAt = (SeekBar) findViewById(R.id.sbWorst);
+        txtMark = (EditText) findViewById(R.id.txtCurMark);
+        txtPoints = (EditText) findViewById(R.id.txtCurPoints);
+
         try {
-            this.setTitle(this.getTitle() + " v" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            // create object of classes 'clsSharedPreferences', 'clsDrawDiagram', 'clsDrawCurrent'
             pref = new clsSharedPreference(getApplicationContext());
-            rlMain = (RelativeLayout) findViewById(R.id.rlMain);
-            rlDiagram = (RelativeLayout) findViewById(R.id.rlDiagram);
-            surf = new clsSurface(this,0,20);
-            rlDiagram.addView(surf);
-            tblSettings = (TableLayout) findViewById(R.id.tblSettings);
-            if(getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                cmdExp = (ImageButton) findViewById(R.id.cmdOpenClose);
-            }
-            cmdSearch = (ImageButton) findViewById(R.id.cmdSearch);
-            txtMaxPoints = (EditText) findViewById(R.id.txtMaxPoints);
-            txtSearch = (EditText) findViewById(R.id.txtSearch);
-            spMarks = (Spinner) findViewById(R.id.spMarks);
-            spPoints = (Spinner) findViewById(R.id.spPoints);
-            optMarks = (RadioButton) findViewById(R.id.optMarks);
-            optPoints = (RadioButton) findViewById(R.id.optPoints);
-            spViews = (Spinner) findViewById(R.id.spView);
-            chkDictatMode = (CheckBox) findViewById(R.id.chkDictatMode);
-            lvMarkList = (GridView) findViewById(R.id.grdMarkList);
-            lvHeader = (GridView) findViewById(R.id.lvHeader);
-            lblMaxPoints = (TextView) findViewById(R.id.lblMaxPoints);
-            lblPoints = (TextView) findViewById(R.id.lblCurPoints);
-            spMode = (Spinner) findViewById(R.id.spMode);
-            sbBestAt = (SeekBar) findViewById(R.id.sbBestMark);
-            sbWorstAt = (SeekBar) findViewById(R.id.sbWorst);
-            txtMark = (EditText) findViewById(R.id.txtCurMark);
-            txtPoints = (EditText) findViewById(R.id.txtCurPoints);
+            current = new clsDrawCurrent(getApplicationContext());
+            diagram = new clsDrawDiagram(getApplicationContext());
+
+            // add version to title
+            this.setTitle(this.getTitle() + " v" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
             lvHeader.setEnabled(false);
-            txtMaxPoints.setText(pref.getMaxPoints());
-            spMarks.setSelection(Integer.parseInt(String.valueOf(pref.getMarks())));
-            spMode.setSelection(Integer.parseInt(String.valueOf(pref.getMode())));
-            spPoints.setSelection(Integer.parseInt(String.valueOf(pref.getPoints())));
-            spViews.setSelection(Integer.parseInt(String.valueOf(pref.getViews())));
-            sbBestAt.setMax(Integer.parseInt(pref.getMaxPoints()));
-            sbWorstAt.setMax(Integer.parseInt(pref.getMaxPoints()));
-            txtMark.setText(String.valueOf(pref.getUserMark()));
-            txtPoints.setText(String.valueOf(pref.getUserPoint()));
-            sbBestAt.setProgress((int)pref.getBestMarkAt());
-            sbWorstAt.setProgress((int)pref.getWorstMarkAt());
+
+            // add values of the sharedPreferences to controls
+            txtMaxPoints.setText(String.valueOf(pref.getMaxPoints()));
+            spPoints.setSelection(Integer.parseInt(String.valueOf(pref.getPointMode())));
+            spMarks.setSelection(Integer.parseInt(String.valueOf(pref.getMarkMode())));
+            spViews.setSelection(Integer.parseInt(String.valueOf(pref.getViewMode())));
             chkDictatMode.setChecked(pref.getDictMode());
+
+            spMode.setSelection(Integer.parseInt(String.valueOf(pref.getMarkListMode())));
+            sbBestAt.setMax(pref.getMaxPoints());
+            sbWorstAt.setMax(pref.getMaxPoints());
+            if(chkDictatMode.isChecked()) {
+                sbBestAt.setProgress(pref.getWorstMarkAt());
+                sbWorstAt.setProgress(pref.getBestMarkAt());
+                lblBestMark.setText(String.valueOf(pref.getWorstMarkAt()));
+                lblWorstMark.setText(String.valueOf(pref.getBestMarkAt()));
+            } else {
+                sbBestAt.setProgress(pref.getBestMarkAt());
+                sbWorstAt.setProgress(pref.getWorstMarkAt());
+                lblBestMark.setText(String.valueOf(pref.getBestMarkAt()));
+                lblWorstMark.setText(String.valueOf(pref.getWorstMarkAt()));
+            }
+            txtMark.setText(String.valueOf(pref.getCustomMark()));
+            txtPoints.setText(String.valueOf(pref.getCustomPoint()));
+
+            diagram.setMaxPoints(pref.getMaxPoints());
+            diagram.setDictMode(pref.getDictMode());
+            rlDiagram.addView(diagram);
+
+            current.setMaxPoints(pref.getMaxPoints());
+            current.setDictMode(pref.getDictMode());
+            current.setBestMarkAt(pref.getBestMarkAt());
+            current.setWorstMarkAt(pref.getWorstMarkAt());
+            current.setTextViewMark(txtMark);
+            current.setTextViewPoints(txtPoints);
+            rlLineDiagram.addView(current);
+
             ((ArrayAdapter) spMarks.getAdapter()).notifyDataSetChanged();
             ((ArrayAdapter) spViews.getAdapter()).notifyDataSetChanged();
-            changeSearchText();
-            updateBackgrounds();
-            createList();
-
             if(chkDictatMode.isChecked()) {
                 optPoints.setText(getString(R.string.mistakes));
             } else {
                 optPoints.setText(getString(R.string.points));
             }
+
         } catch (Exception ex) {
-            clsHelper.createToast(getApplicationContext(), getString(R.string.errorProblemsWithSettings) + "\n" + ex.toString());
+            clsHelper.createToast(getApplicationContext(), getString(R.string.errorProblemsWithSettings));
         }
+
+        changeSearchText();
+        updateBackgrounds();
+        createList();
 
         if(getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
             tblHeight = tblSettings.getLayoutParams().height;
             tblSettings.getLayoutParams().height = cmdExp.getLayoutParams().height;
-
-
             cmdExp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -152,7 +187,18 @@ public class actMain extends AppCompatActivity
 
             @Override
             public void afterTextChanged(Editable editable) {
-                createList();
+                try {
+                    if (!txtMaxPoints.getText().toString().equals("")) {
+                        int maxPoints = Integer.parseInt(txtMaxPoints.getText().toString());
+                        createList();
+                        diagram.setMaxPoints(maxPoints);
+                        diagram.calcDiagram();
+                        current.setMaxPoints(pref.getMaxPoints());
+                        current.calcDiagram(false);
+                    }
+                } catch (Exception ex) {
+                    clsHelper.createToast(getApplicationContext(), getApplicationContext().getString(R.string.errorSomethingWentWrong));
+                }
             }
         });
 
@@ -196,6 +242,7 @@ public class actMain extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 createList();
+                controllDiagram();
             }
 
             @Override
@@ -207,12 +254,23 @@ public class actMain extends AppCompatActivity
         sbBestAt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                createList();
+                if (chkDictatMode.isChecked()) {
+                    current.setBestMarkAt(Integer.parseInt(txtMaxPoints.getText().toString()) - sbBestAt.getProgress());
+                    lblBestMark.setText(String.valueOf(sbBestAt.getProgress()));
+                } else {
+                    current.setBestMarkAt(Integer.parseInt(txtMaxPoints.getText().toString()) - sbBestAt.getProgress());
+                    lblBestMark.setText(String.valueOf(Integer.parseInt(txtMaxPoints.getText().toString()) - sbBestAt.getProgress()));
+                }
+                current.calcDiagram(false);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                try {
+                    sbBestAt.setMax(Integer.parseInt(txtPoints.getText().toString().replace(".", "-").split("-")[0]) - 1);
+                } catch (Exception ex) {
+                    clsHelper.createToast(getApplicationContext(), getString(R.string.errorSomethingWentWrong));
+                }
             }
 
             @Override
@@ -224,12 +282,23 @@ public class actMain extends AppCompatActivity
         sbWorstAt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                createList();
+                if(chkDictatMode.isChecked()) {
+                    current.setWorstMarkAt(sbWorstAt.getProgress());
+                    lblWorstMark.setText(String.valueOf(Integer.parseInt(txtMaxPoints.getText().toString()) - sbWorstAt.getProgress()));
+                } else {
+                    current.setWorstMarkAt(sbWorstAt.getProgress());
+                    lblWorstMark.setText(String.valueOf(sbWorstAt.getProgress()));
+                }
+                current.calcDiagram(false);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                try {
+                    sbWorstAt.setMax(Integer.parseInt(new DecimalFormat("0").format(Double.parseDouble(txtPoints.getText().toString()))));
+                }catch(Exception ex) {
+                    clsHelper.createToast(getApplicationContext(), getString(R.string.errorSomethingWentWrong));
+                }
             }
 
             @Override
@@ -251,7 +320,11 @@ public class actMain extends AppCompatActivity
 
             @Override
             public void afterTextChanged(Editable s) {
-                createList();
+                try {
+                    createList();
+                } catch (Exception ex) {
+                    clsHelper.createToast(getApplicationContext(), getString(R.string.errorSomethingWentWrong));
+                }
             }
         });
 
@@ -268,7 +341,11 @@ public class actMain extends AppCompatActivity
 
             @Override
             public void afterTextChanged(Editable s) {
-                createList();
+                try {
+                    createList();
+                }catch (Exception ex) {
+                    clsHelper.createToast(getApplicationContext(), getString(R.string.errorSomethingWentWrong));
+                }
             }
         });
 
@@ -284,6 +361,10 @@ public class actMain extends AppCompatActivity
                 }
                 createList();
                 changeSearchText();
+                diagram.setDictMode(chkDictatMode.isChecked());
+                diagram.calcDiagram();
+                current.setDictMode(chkDictatMode.isChecked());
+                current.calcDiagram(false);
             }
         });
 
@@ -327,6 +408,42 @@ public class actMain extends AppCompatActivity
                 return true;
             }
         });
+
+        txtPoints.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                current.setTextViewPoints(txtPoints);
+                current.calcDiagram(false);
+            }
+        });
+
+        txtMark.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                current.setTextViewMark(txtMark);
+                current.calcDiagram(false);
+            }
+        });
     }
 
     @Override
@@ -356,16 +473,27 @@ public class actMain extends AppCompatActivity
         }
 
         if(id == R.id.menSaveSettings) {
-            pref.setMaxPoints(txtMaxPoints.getText().toString());
-            pref.setMarks(spMarks.getSelectedItemId());
-            pref.setPoints(spPoints.getSelectedItemId());
-            pref.setViews(spViews.getSelectedItemId());
+            pref.setMaxPoints(Integer.parseInt(txtMaxPoints.getText().toString()));
+            pref.setMarkMode(spMarks.getSelectedItemId());
+            pref.setPointMode(spPoints.getSelectedItemId());
+            pref.setViewMode(spViews.getSelectedItemId());
             pref.setDictMode(chkDictatMode.isChecked());
-            pref.setMode(spMode.getSelectedItemId());
-            pref.setBestMarkAt(sbBestAt.getProgress());
-            pref.setWorstMarkAt(sbWorstAt.getProgress());
-            pref.setUserMark(Float.parseFloat(txtMark.getText().toString()));
-            pref.setUserPoint(Float.parseFloat(txtPoints.getText().toString()));
+            pref.setMarkListMode(spMode.getSelectedItemId());
+            pref.setBestMarkAt(Integer.parseInt(lblBestMark.getText().toString()));
+            pref.setWorstMarkAt(Integer.parseInt(lblWorstMark.getText().toString()));
+            float customMark, customPoint;
+            try {
+                customMark = Float.parseFloat(String.valueOf(txtMark.getText()));
+            } catch(Exception ex) {
+                customMark = 3.5F;
+            }
+            try {
+                customPoint = Float.parseFloat(String.valueOf(txtPoints.getText()));
+            } catch(Exception ex) {
+                customPoint = Integer.parseInt(txtMaxPoints.getText().toString())/2;
+            }
+            pref.setCustomMark(customMark);
+            pref.setCustomPoint(customPoint);
             pref.save();
             clsHelper.createToast(getApplicationContext(), getString(R.string.infoSettingsSaved));
         }
@@ -373,11 +501,16 @@ public class actMain extends AppCompatActivity
         if(id == R.id.menExport) {
             try {
                 Intent intent = new Intent(this.getApplicationContext(), actExport.class);
-                intent.putExtra(getString(R.string.prefMaxPoints), txtMaxPoints.getText().toString());
-                intent.putExtra(getString(R.string.mark), spMarks.getSelectedItemId());
-                intent.putExtra(getString(R.string.points), spMarks.getSelectedItemId());
-                intent.putExtra(getString(R.string.view), spViews.getSelectedItemId());
-                intent.putExtra(getString(R.string.prefDictMode), chkDictatMode.isChecked());
+                intent.putExtra(pref.PREFMAXPOINTS, txtMaxPoints.getText().toString());
+                intent.putExtra(pref.PREFMARKLISTMODE, spMode.getSelectedItemId());
+                intent.putExtra(pref.PREFMARKMODE, spMarks.getSelectedItemId());
+                intent.putExtra(pref.PREFPOINTMODE, spPoints.getSelectedItemId());
+                intent.putExtra(pref.PREFVIEWMODE, spViews.getSelectedItemId());
+                intent.putExtra(pref.PREFDICTMODE, chkDictatMode.isChecked());
+                intent.putExtra(pref.PREFBESTAT, sbBestAt.getProgress());
+                intent.putExtra(pref.PREFWORSTAT, sbWorstAt.getProgress());
+                intent.putExtra(pref.PREFCUSTOMPOINT, txtPoints.getText().toString());
+                intent.putExtra(pref.PREFCUSTOMMARK, txtMark.getText().toString());
                 startActivityForResult(intent, 0);
             }catch (Exception ex) {
                 CharSequence text = String.valueOf(ex.toString());
@@ -404,9 +537,6 @@ public class actMain extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -421,16 +551,16 @@ public class actMain extends AppCompatActivity
 
     @Override
     protected void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
-        surf.onResumeMySurfaceView();
+        this.diagram.onResumeMySurfaceView();
+        this.current.onResumeMySurfaceView();
     }
 
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
-        surf.onPauseMySurfaceView();
+        this.diagram.onPauseMySurfaceView();
+        this.current.onPauseMySurfaceView();
     }
 
     /*private void find() {
@@ -466,10 +596,10 @@ public class actMain extends AppCompatActivity
     }
 
     private void createList() {
-        if(!txtMaxPoints.getText().equals("")) {
+        if(!txtMaxPoints.getText().toString().equals("")) {
             clsMarkList.Sorting srt;
             clsMarkList.Mode mode;
-            MarkListViewHelper viewer = new MarkListViewHelper(Integer.parseInt(txtMaxPoints.getText().toString()), lvMarkList, lvHeader, getApplicationContext());
+            MarkListViewHelper viewer = new MarkListViewHelper(this, Integer.parseInt(txtMaxPoints.getText().toString()), lvMarkList, lvHeader, getApplicationContext());
             viewer.setDictatMode(chkDictatMode.isChecked());
             switch(Integer.parseInt(String.valueOf(spMode.getSelectedItemId()))) {
                 case 0:
@@ -530,6 +660,8 @@ public class actMain extends AppCompatActivity
                     srt = clsMarkList.Sorting.lowestPointsFirst;
             }
             viewer.update(srt, mode);
+            Thread th = new Thread(viewer);
+            th.start();
         }
     }
 
@@ -546,21 +678,49 @@ public class actMain extends AppCompatActivity
     }
 
     private void updateBackgrounds() {
-        SharedPreferences sharedPref = getBaseContext().getSharedPreferences(getString(R.string.sysSharedPref), Context.MODE_PRIVATE);
         final int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            rlMain.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefBackground), R.drawable.light_bg_texture_01)));
-            lvHeader.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefHeader), R.drawable.medium_bg_texture_04)));
-            tblSettings.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefCTRLCenter), R.drawable.dark_bg_texture_04)));
+            rlMain.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, pref.getBackground()));
+            lvHeader.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, pref.getHeader()));
+            tblSettings.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, pref.getCTRLCenter()));
         } else {
-            dangerousBG(sharedPref);
+            dangerousBG();
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void dangerousBG(SharedPreferences sharedPref) {
-        rlMain.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefBackground), R.drawable.light_bg_texture_01)));
-        lvHeader.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefHeader), R.drawable.medium_bg_texture_04)));
-        tblSettings.setBackground(clsHelper.getBitmapDrawable(this, sharedPref.getInt(getString(R.string.prefCTRLCenter), R.drawable.dark_bg_texture_04)));
+    private void dangerousBG() {
+        rlMain.setBackground(clsHelper.getBitmapDrawable(this, pref.getBackground()));
+        lvHeader.setBackground(clsHelper.getBitmapDrawable(this, pref.getHeader()));
+        tblSettings.setBackground(clsHelper.getBitmapDrawable(this, pref.getCTRLCenter()));
+    }
+
+    private void controllDiagram() {
+        switch(Integer.parseInt(String.valueOf(spMode.getSelectedItemId()))) {
+            case 0:
+            case 3:
+            case 5:
+                rlDiagram.setEnabled(false);
+                sbBestAt.setEnabled(false);
+                sbWorstAt.setEnabled(false);
+                txtMark.setEnabled(false);
+                txtPoints.setEnabled(false);
+                txtPoints.setText(String.valueOf(current.getMaxPoints() / 2));
+                txtMark.setText(String.valueOf(3.5));
+                current.setWorstMarkAt(0);
+                current.setBestMarkAt(current.getMaxPoints());
+                current.setTextViewPoints(txtPoints);
+                current.setTextViewMark(txtMark);
+                break;
+            case 1:
+            case 2:
+                rlDiagram.setEnabled(true);
+                sbBestAt.setEnabled(true);
+                sbWorstAt.setEnabled(true);
+                txtMark.setEnabled(true);
+                txtPoints.setEnabled(true);
+                break;
+        }
+        current.calcDiagram(false);
     }
 }
