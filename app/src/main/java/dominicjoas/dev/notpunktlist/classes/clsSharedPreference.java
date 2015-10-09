@@ -3,146 +3,162 @@ package dominicjoas.dev.notpunktlist.classes;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
-
 import dominicjoas.dev.notpunktlist.R;
 
-/**
- * Created by Dominic Joas on 01.09.2015.
- */
 public class clsSharedPreference {
     private SharedPreferences preference;
     private SharedPreferences.Editor editor;
     private Context ctx;
+    public String PREFMAXPOINTS, PREFPOINTMODE, PREFMARKMODE, PREFVIEWMODE, PREFMARKLISTMODE;
+    public String PREFBESTAT, PREFWORSTAT, PREFCUSTOMPOINT, PREFCUSTOMMARK, PREFDICTMODE;
+    public String PREFBACKGROUND, PREFCONTROLCENTER, PREFHEADER, PREFPATH;
 
     public clsSharedPreference(Context ctx) {
         this.ctx = ctx;
         this.preference = this.ctx.getSharedPreferences(ctx.getString(R.string.sysSharedPref), Context.MODE_PRIVATE);
+
+        this.PREFMAXPOINTS = ctx.getString(R.string.prefMaxPoints);
+        this.PREFMARKLISTMODE = ctx.getString(R.string.prefMarkListMode);
+        this.PREFPOINTMODE = ctx.getString(R.string.prefPointMode);
+        this.PREFMARKMODE = ctx.getString(R.string.prefMarkMode);
+        this.PREFVIEWMODE = ctx.getString(R.string.prefViewMode);
+
+        this.PREFBESTAT = ctx.getString(R.string.prefBestAt);
+        this.PREFWORSTAT = ctx.getString(R.string.prefWorstAt);
+        this.PREFCUSTOMPOINT = ctx.getString(R.string.prefCustomPoint);
+        this.PREFCUSTOMMARK = ctx.getString(R.string.prefCustomMark);
+        this.PREFDICTMODE = ctx.getString(R.string.prefDictMode);
+
+        this.PREFBACKGROUND = ctx.getString(R.string.prefBackground);
+        this.PREFCONTROLCENTER = ctx.getString(R.string.prefCTRLCenter);
+        this.PREFHEADER = ctx.getString(R.string.prefHeader);
+        this.PREFPATH = ctx.getString(R.string.prefPath);
     }
 
-    public void setMaxPoints(String maxPoints) {
+    public void setMaxPoints(int maxPoints) {
         implementEditor();
-        editor.putString(this.ctx.getString(R.string.prefMaxPoints), maxPoints);
+        editor.putInt(this.PREFMAXPOINTS, maxPoints);
     }
 
-    public String getMaxPoints() {
-        return preference.getString(this.ctx.getString(R.string.prefMaxPoints), "20");
+    public int getMaxPoints() {
+        return preference.getInt(this.PREFMAXPOINTS, 20);
     }
 
-    public void setPoints(long index) {
+    public void setPointMode(long index) {
         implementEditor();
-        editor.putLong(this.ctx.getString(R.string.points), index);
+        editor.putLong(this.PREFPOINTMODE, index);
     }
 
-    public long getPoints() {
-        return preference.getLong(this.ctx.getString(R.string.points), 0);
+    public long getPointMode() {
+        return preference.getLong(this.PREFPOINTMODE, 0);
     }
 
-    public void setMarks(long index) {
+    public void setMarkMode(long index) {
         implementEditor();
-        editor.putLong(this.ctx.getString(R.string.mark), index);
+        editor.putLong(this.PREFMARKMODE, index);
     }
 
-    public long getMarks() {
-        return preference.getLong(this.ctx.getString(R.string.mark), 0);
+    public long getMarkMode() {
+        return preference.getLong(this.PREFMARKMODE, 0);
     }
 
-    public void setViews(long index) {
+    public void setViewMode(long index) {
         implementEditor();
-        editor.putLong(this.ctx.getString(R.string.view), index);
+        editor.putLong(this.PREFVIEWMODE, index);
     }
 
-    public long getViews() {
-        return preference.getLong(this.ctx.getString(R.string.view), 0);
+    public long getViewMode() {
+        return preference.getLong(this.PREFVIEWMODE, 0);
     }
 
-    public void setMode(long index) {
+    public void setMarkListMode(long index) {
         implementEditor();
-        editor.putLong(this.ctx.getString(R.string.mode), index);
+        editor.putLong(this.PREFMARKLISTMODE, index);
     }
 
-    public long getMode() {
-        return preference.getLong(this.ctx.getString(R.string.mode), 0);
+    public long getMarkListMode() {
+        return preference.getLong(this.PREFMARKLISTMODE, 0);
     }
 
-    public void setBestMarkAt(float bestMark) {
+    public void setBestMarkAt(int bestMark) {
         implementEditor();
-        editor.putFloat(this.ctx.getString(R.string.bestAt), bestMark);
+        editor.putInt(this.PREFBESTAT, bestMark);
     }
 
-    public float getBestMarkAt() {
-        return preference.getFloat(this.ctx.getString(R.string.bestAt), Float.parseFloat(preference.getString(this.ctx.getString(R.string.prefMaxPoints), "20")));
+    public int getBestMarkAt() {
+        return preference.getInt(this.PREFBESTAT, 20);
     }
 
-    public void setWorstMarkAt(float worstMark) {
+    public void setWorstMarkAt(int worstMark) {
         implementEditor();
-        editor.putFloat(this.ctx.getString(R.string.worstAt), worstMark);
+        editor.putInt(this.PREFWORSTAT, worstMark);
     }
 
-    public float getWorstMarkAt() {
-        return preference.getFloat(this.ctx.getString(R.string.worstAt), 0.0F);
+    public int getWorstMarkAt() {
+        return preference.getInt(this.PREFWORSTAT, 0);
     }
 
-    public void setUserPoint(float points) {
+    public void setCustomPoint(float points) {
         implementEditor();
-        editor.putFloat(this.ctx.getString(R.string.userpoints), points);
+        editor.putFloat(this.PREFCUSTOMPOINT, points);
     }
 
-    public float getUserPoint() {
-        return preference.getFloat(this.ctx.getString(R.string.userpoints), Float.parseFloat(preference.getString(this.ctx.getString(R.string.prefMaxPoints), "20"))/2);
+    public float getCustomPoint() {
+        return preference.getFloat(this.PREFCUSTOMPOINT, 10.0F);
     }
 
-    public void setUserMark(float mark) {
+    public void setCustomMark(float mark) {
         implementEditor();
-        editor.putFloat(this.ctx.getString(R.string.usermark), mark);
+        editor.putFloat(this.PREFCUSTOMMARK, mark);
     }
 
-    public float getUserMark() {
-        return preference.getFloat(this.ctx.getString(R.string.usermark), 3.5F);
+    public float getCustomMark() {
+        return preference.getFloat(this.PREFCUSTOMMARK, 3.5F);
     }
 
     public void setDictMode(boolean dictMode) {
         implementEditor();
-        editor.putBoolean(this.ctx.getString(R.string.prefDictMode), dictMode);
+        editor.putBoolean(this.PREFDICTMODE, dictMode);
     }
 
     public boolean getDictMode() {
-        return preference.getBoolean(this.ctx.getString(R.string.prefDictMode), false);
+        return preference.getBoolean(this.PREFDICTMODE, false);
     }
 
     public void setBackground(int drawable) {
         implementEditor();
-        editor.putInt(this.ctx.getString(R.string.prefBackground), drawable);
+        editor.putInt(this.PREFBACKGROUND, drawable);
     }
 
     public int getBackground() {
-        return preference.getInt(this.ctx.getString(R.string.prefBackground), R.drawable.light_bg_texture_04);
+        return preference.getInt(this.PREFBACKGROUND, R.drawable.light_bg_texture_04);
     }
 
     public void setCTRLCenter(int drawable) {
         implementEditor();
-        editor.putInt(this.ctx.getString(R.string.prefCTRLCenter), drawable);
+        editor.putInt(this.PREFCONTROLCENTER, drawable);
     }
 
     public int getCTRLCenter() {
-        return preference.getInt(this.ctx.getString(R.string.prefCTRLCenter), R.drawable.dark_bg_texture_04);
+        return preference.getInt(this.PREFCONTROLCENTER, R.drawable.dark_bg_texture_04);
     }
 
     public void setHeader(int drawable) {
         implementEditor();
-        editor.putInt(this.ctx.getString(R.string.prefHeader), drawable);
+        editor.putInt(this.PREFHEADER, drawable);
     }
 
     public int getHeader() {
-        return preference.getInt(this.ctx.getString(R.string.prefHeader), R.drawable.medium_bg_texture_04);
+        return preference.getInt(this.PREFHEADER, R.drawable.medium_bg_texture_04);
     }
 
     public void setPath(String path) {
         implementEditor();
-        editor.putString(this.ctx.getString(R.string.prefPath), path);
+        editor.putString(this.PREFPATH, path);
     }
 
     public String getPath() {
-        return preference.getString(this.ctx.getString(R.string.prefPath), Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
+        return preference.getString(this.PREFPATH, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
     }
 
     public void setString(String key, String value) {

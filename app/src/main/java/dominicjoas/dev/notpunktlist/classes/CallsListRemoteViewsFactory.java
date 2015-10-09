@@ -61,7 +61,7 @@ public class CallsListRemoteViewsFactory implements RemoteViewsService.RemoteVie
     @Override
     public void onCreate() {
         clsSharedPreference pref =  new clsSharedPreference(mContext);
-        clsMarkList list = new clsMarkList(Integer.parseInt(pref.getMaxPoints()));
+        clsMarkList list = new clsMarkList(pref.getMaxPoints());
         mCallsList = new ArrayList<>();
         Map<Double, Double> marklist = list.generateList(clsMarkList.Sorting.bestMarkFirst, clsMarkList.Mode.linear);
         for(double key : marklist.keySet()) {
@@ -78,7 +78,7 @@ public class CallsListRemoteViewsFactory implements RemoteViewsService.RemoteVie
     @Override
     public void onDataSetChanged() {
         clsSharedPreference pref =  new clsSharedPreference(mContext);
-        clsMarkList list = new clsMarkList(Integer.parseInt(pref.getMaxPoints()));
+        clsMarkList list = new clsMarkList(pref.getMaxPoints());
         mCallsList = new ArrayList<>();
         Map<Double, Double> marklist = list.generateList(clsMarkList.Sorting.bestMarkFirst, clsMarkList.Mode.linear);
         for(Double key : marklist.keySet()) {

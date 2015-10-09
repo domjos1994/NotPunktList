@@ -171,6 +171,12 @@ public class clsMarkList {
         } else {
             this.generatedList = this.generatePointList(this.intMaxPoints);
         }
+        List<Double> other;
+        if(srt==Sorting.bestMarkFirst || srt==Sorting.worstMarkFirst) {
+            other = this.generatePointList(this.intMaxPoints);
+        } else {
+            other = this.generateMarkList();
+        }
         switch(mode) {
             case linear:
                 if(this.boolAbiturPointsIsEnabled) {
@@ -179,9 +185,9 @@ public class clsMarkList {
                 }
                 for(double curVal :this.generatedList) {
                     if(srt==Sorting.bestMarkFirst || srt==Sorting.worstMarkFirst) {
-                        marklist.put(curVal, this.closest(this.calcPoints(curVal), this.generatePointList(this.intMaxPoints)));
+                        marklist.put(curVal, this.closest(this.calcPoints(curVal), other));
                     } else {
-                        marklist.put(curVal, this.closest(this.calcMark(curVal), this.generateMarkList()));
+                        marklist.put(curVal, this.closest(this.calcMark(curVal), other));
                     }
                 }
                 break;
@@ -220,7 +226,7 @@ public class clsMarkList {
                 Map<Double, Double> mpMain = this.getIHKList();
                 if(srt==Sorting.bestMarkFirst || srt==Sorting.worstMarkFirst) {
                     for(Map.Entry<Double, Double> curEntry : mpMain.entrySet()) {
-                        marklist.put(curEntry.getValue(), this.closest(((double)this.intMaxPoints/100) * curEntry.getKey(), this.generatePointList(this.intMaxPoints)));
+                        marklist.put(curEntry.getValue(), this.closest(((double)this.intMaxPoints/100) * curEntry.getKey(), other));
                     }
                 } else {
                     List<Double> lsValues = new ArrayList<>();
@@ -236,7 +242,7 @@ public class clsMarkList {
                 mpMain = this.getAbiturPointList();
                 if(srt==Sorting.bestMarkFirst || srt==Sorting.worstMarkFirst) {
                     for(Map.Entry<Double, Double> curEntry : mpMain.entrySet()) {
-                        marklist.put(curEntry.getValue(), this.closest(((double)this.intMaxPoints/100) * curEntry.getKey(), this.generatePointList(this.intMaxPoints)));
+                        marklist.put(curEntry.getValue(), this.closest(((double)this.intMaxPoints/100) * curEntry.getKey(), other));
                     }
                 } else {
                     List<Double> lsValues = new ArrayList<>();
