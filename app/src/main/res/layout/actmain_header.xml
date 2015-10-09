@@ -28,12 +28,12 @@
             android:layout_width="fill_parent"
             android:layout_height="25dp">
             <TextView
-                android:layout_span="20"
+                android:layout_span="10"
                 android:text="@string/mode"
                 android:layout_gravity="center"
                 android:gravity="center"/>
             <Spinner
-                android:layout_span="20"
+                android:layout_span="30"
                 android:id="@+id/spMode"
                 android:entries="@array/mode">
             </Spinner>
@@ -44,34 +44,46 @@
             <RelativeLayout
                 android:layout_height="200dp"
                 android:layout_span="40"
-                android:id="@+id/rlDiagram"
-                android:background="@color/textColor">
+                android:id="@+id/rlDiagram">
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/rlCurrentLine">
+                </RelativeLayout>
             </RelativeLayout>
         </TableRow>
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:layout_span="10"
+                android:layout_span="15"
                 android:text="@string/bestAt"
                 android:layout_gravity="center"
                 android:gravity="center"/>
             <SeekBar
-                android:layout_span="30"
+                android:layout_span="20"
                 android:id="@+id/sbBestMark"
+                android:layout_width="fill_parent"/>
+            <TextView
+                android:layout_span="5"
+                android:id="@+id/lblCurrentBestMark"
                 android:layout_width="fill_parent"/>
         </TableRow>
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:layout_span="10"
+                android:layout_span="15"
                 android:text="@string/worstAt"
                 android:layout_gravity="center"
                 android:gravity="center"/>
             <SeekBar
-                android:layout_span="30"
+                android:layout_span="20"
                 android:id="@+id/sbWorst"
+                android:layout_width="fill_parent"/>
+            <TextView
+                android:layout_span="5"
+                android:id="@+id/lblCurrentWorstMark"
                 android:layout_width="fill_parent"/>
         </TableRow>
         <TableRow
