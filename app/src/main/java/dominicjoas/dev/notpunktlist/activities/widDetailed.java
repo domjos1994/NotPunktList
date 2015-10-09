@@ -13,7 +13,6 @@ import java.util.List;
 
 import dominicjoas.dev.notpunktlist.R;
 import dominicjoas.dev.notpunktlist.classes.WidgetService;
-import dominicjoas.dev.notpunktlist.classes.clsMarkList;
 import dominicjoas.dev.notpunktlist.classes.clsSharedPreference;
 
 public class widDetailed extends AppWidgetProvider {
@@ -49,8 +48,6 @@ public class widDetailed extends AppWidgetProvider {
 
     private static String[] getList(Context ctx) {
         clsSharedPreference pref =  new clsSharedPreference(ctx);
-        clsMarkList list = new clsMarkList(Double.parseDouble(pref.getMaxPoints()), !pref.getHalfPoints(), !pref.getQuarterMarks());
-        List<String> ls = list.generateList();
         String[] text = new String[2];
         if(pref.getDictMode()) {
             text[0] = ctx.getString(R.string.mistakes) + "            " + ctx.getString(R.string.mark);

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import dominicjoas.dev.notpunktlist.R;
 
@@ -60,15 +61,15 @@ public class CallsListRemoteViewsFactory implements RemoteViewsService.RemoteVie
     @Override
     public void onCreate() {
         clsSharedPreference pref =  new clsSharedPreference(mContext);
-        clsMarkList list = new clsMarkList(Double.parseDouble(pref.getMaxPoints()), !pref.getHalfPoints(), !pref.getQuarterMarks());
+        clsMarkList list = new clsMarkList(pref.getMaxPoints());
         mCallsList = new ArrayList<>();
-        for(String item : list.generateList()) {
-            String[] arrItem = item.split(";");
-            String strItem = arrItem[0];
+        Map<Double, Double> marklist = list.generateList(clsMarkList.Sorting.bestMarkFirst, clsMarkList.Mode.linear);
+        for(double key : marklist.keySet()) {
+            String strItem = String.valueOf(key);
             for(int i = strItem.length(); i<=20; i++) {
                 strItem += " ";
             }
-            strItem += arrItem[1];
+            strItem += marklist.get(key);
             mCallsList.add(strItem);
         }
         Collections.reverse(mCallsList);
@@ -77,18 +78,15 @@ public class CallsListRemoteViewsFactory implements RemoteViewsService.RemoteVie
     @Override
     public void onDataSetChanged() {
         clsSharedPreference pref =  new clsSharedPreference(mContext);
-        clsMarkList list = new clsMarkList(Double.parseDouble(pref.getMaxPoints()), !pref.getHalfPoints(), !pref.getQuarterMarks());
+        clsMarkList list = new clsMarkList(pref.getMaxPoints());
         mCallsList = new ArrayList<>();
-        for(String item : list.generateList()) {
-            String[] arrItem = item.split(";");
-            String strItem = arrItem[0];
+        Map<Double, Double> marklist = list.generateList(clsMarkList.Sorting.bestMarkFirst, clsMarkList.Mode.linear);
+        for(Double key : marklist.keySet()) {
+            String strItem = String.valueOf(key);
             for(int i = strItem.length(); i<=20; i++) {
                 strItem += " ";
             }
-            if(pref.getDictMode()) {
-                arrItem[1] = String.valueOf(Double.parseDouble(pref.getMaxPoints()) - Double.parseDouble(arrItem[1]));
-            }
-            strItem += arrItem[1];
+            strItem += marklist.get(key);
             mCallsList.add(strItem);
         }
         Collections.reverse(mCallsList);

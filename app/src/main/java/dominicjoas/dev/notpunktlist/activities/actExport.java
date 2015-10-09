@@ -60,26 +60,26 @@ public class actExport extends AppCompatActivity {
         cmdExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clsMarkList list = new clsMarkList(Double.parseDouble(getIntent().getStringExtra(getString(R.string.prefMaxPoints))), !getIntent().getBooleanExtra(getString(R.string.prefHalfPoints), true), !getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true));
-                List<String> marklist = list.generateList();
+                clsMarkList list = new clsMarkList(Integer.parseInt(getIntent().getStringExtra(getString(R.string.prefMaxPoints))));
+                Map<Double, Double> marklist = list.generateList(clsMarkList.Sorting.bestMarkFirst, clsMarkList.Mode.linear);
                 List<String> lsCorrect = new ArrayList<>();
                 if(getIntent().getBooleanExtra(getString(R.string.prefDictMode), true)) {
                     lsCorrect.add(getString(R.string.mistakes) + "             " + getString(R.string.mark));
-                    for(String current : marklist) {
-                        String cur = String.valueOf(Double.parseDouble(getIntent().getStringExtra(getString(R.string.prefMaxPoints))) - Double.parseDouble(current.split(getString(R.string.sysSplitChar))[0]));
+                    for(Double key : marklist.keySet()) {
+                        String cur = String.valueOf(Double.parseDouble(getIntent().getStringExtra(getString(R.string.prefMaxPoints))) - key);
                         for(int i = cur.length(); i<=20;i++) {
                             cur += " ";
                         }
-                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + current.split(getString(R.string.sysSplitChar))[1]);
+                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + marklist.get(key));
                     }
                 } else {
                     lsCorrect.add(getString(R.string.points) + "             " + getString(R.string.mark));
-                    for(String current : marklist) {
-                        String cur = current.split(getString(R.string.sysSplitChar))[0];
+                    for(Double key : marklist.keySet()) {
+                        String cur = String.valueOf(key);
                         for(int i = cur.length(); i<=20;i++) {
                             cur += " ";
                         }
-                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + current.split(getString(R.string.sysSplitChar))[1]);
+                        lsCorrect.add(cur + getString(R.string.sysSplitChar) + marklist.get(key));
                     }
                 }
                 String path = "";
@@ -99,7 +99,7 @@ public class actExport extends AppCompatActivity {
                         writer.println(getString(R.string.expTitle));
                         writer.println(getString(R.string.settings));
                         writer.println(getString(R.string.maxPoints) + ":\t\t" + getIntent().getStringExtra(getString(R.string.prefMaxPoints)));
-                        writer.println(getString(R.string.quarterMarks) + ":\t\t\t" + getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true));
+                        writer.println(getString(R.string.quarterMarks) + ":\t\t\t" + getIntent().getIntExtra(pref.PREFCUSTOMMARK, 0));
                         writer.println(getString(R.string.halfPoints) + ":\t\t\t" + getIntent().getBooleanExtra(getString(R.string.halfPoints), true));
                         writer.println(getString(R.string.dictatMode) + ":\t\t\t" + getIntent().getBooleanExtra(getString(R.string.prefDictMode), true));
                         for(String item : lsCorrect) {
@@ -117,7 +117,7 @@ public class actExport extends AppCompatActivity {
                         writer.println(getString(R.string.expTitle));
                         writer.println(getString(R.string.settings));
                         writer.println(getString(R.string.maxPoints) + getString(R.string.sysSplitChar) + getIntent().getStringExtra(getString(R.string.prefMaxPoints)));
-                        writer.println(getString(R.string.quarterMarks) + getString(R.string.sysSplitChar) + getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true));
+                        writer.println(getString(R.string.quarterMarks) + getString(R.string.sysSplitChar) + getIntent().getIntExtra(pref.PREFMARKMODE , 0));
                         writer.println(getString(R.string.halfPoints) + getString(R.string.sysSplitChar) + getIntent().getBooleanExtra(getString(R.string.halfPoints), true));
                         writer.println(getString(R.string.dictatMode) + getString(R.string.sysSplitChar) + getIntent().getBooleanExtra(getString(R.string.prefDictMode), true));
                         for(String item : lsCorrect) {
@@ -134,8 +134,8 @@ public class actExport extends AppCompatActivity {
                         path = txtPath.getText().toString() + "/" +  getString(R.string.expFilePart) + "_" + new Date().getTime() + ".xml";
                         Map<String, String> dict = new HashMap<>();
                         dict.put(getString(R.string.prefMaxPoints), getIntent().getStringExtra(getString(R.string.prefMaxPoints)));
-                        dict.put(getString(R.string.prefQuarterMarks), String.valueOf(getIntent().getBooleanExtra(getString(R.string.prefQuarterMarks), true)));
-                        dict.put(getString(R.string.prefHalfPoints), String.valueOf(getIntent().getBooleanExtra(getString(R.string.halfPoints), true)));
+                        dict.put(pref.PREFMARKMODE , String.valueOf(getIntent().getBooleanExtra(pref.PREFMARKMODE, true)));
+                        dict.put(pref.PREFPOINTMODE , String.valueOf(getIntent().getBooleanExtra(getString(R.string.halfPoints), true)));
                         dict.put(getString(R.string.prefDictMode), String.valueOf(getIntent().getBooleanExtra(getString(R.string.prefDictMode), true)));
                         xml.addElement(getString(R.string.expXMLList), dict);
                         String first = "", second=getString(R.string.expXMLMark);

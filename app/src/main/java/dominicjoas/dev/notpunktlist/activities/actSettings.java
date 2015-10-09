@@ -46,7 +46,7 @@ public class actSettings extends AppCompatActivity {
         cmdBack = (Button) findViewById(R.id.cmdBack);
         cmdSavePath = (Button) findViewById(R.id.cmdSavePath);
 
-        clsHelper.fillSpinner(this, lvBoxes, Arrays.asList(getString(R.string.prefHeader), getString(R.string.prefBackground), getString(R.string.prefCTRLCenter)));
+        clsHelper.fillSpinner(this, lvBoxes, Arrays.asList(pref.PREFHEADER, pref.PREFBACKGROUND, pref.PREFCONTROLCENTER));
         grdBackgrounds.setAdapter(new ImageAdapter(this));
         txtPath.setText(pref.getPath());
         updateBackgrounds();
@@ -85,7 +85,7 @@ public class actSettings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(new File(txtPath.getText().toString()).exists()) {
-                    pref.setString(getString(R.string.prefPath), txtPath.getText().toString());
+                    pref.setString(pref.PREFPATH, txtPath.getText().toString());
                     pref.save();
                     clsHelper.createToast(getApplicationContext(), getString(R.string.infoOptionsSaved));
                 } else {
