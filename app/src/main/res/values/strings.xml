@@ -42,14 +42,20 @@
     <string name="errorPathDontExist">Pfad existiert nicht!</string>
     <string name="errorNoBackgroundChosen">Sie haben noch keinen Hintergrund ausgewählt!</string>
 
-    <string name="prefBackground">Hintergrund</string>
-    <string name="prefHeader">Kopfbereich</string>
-    <string name="prefCTRLCenter">Kontrollzentrum</string>
-    <string name="prefPath">Pfad</string>
     <string name="prefMaxPoints">maxPoints</string>
-    <string name="prefQuarterMarks">quarterMarks</string>
-    <string name="prefHalfPoints">halfPoints</string>
+    <string name="prefMarkListMode">marklistMode</string>
+    <string name="prefMarkMode">markMode</string>
+    <string name="prefPointMode">pointMode</string>
+    <string name="prefViewMode">viewMode</string>
     <string name="prefDictMode">dictMode</string>
+    <string name="prefBestAt">bestAt</string>
+    <string name="prefWorstAt">worstAt</string>
+    <string name="prefCustomMark">customMark</string>
+    <string name="prefCustomPoint">customPoint</string>
+    <string name="prefCTRLCenter">controlCenter</string>
+    <string name="prefPath">path</string>
+    <string name="prefBackground">background</string>
+    <string name="prefHeader">header</string>
 
     <string name="sysTitle">NotPunktList</string>
     <string name="sysCharset">UTF-8</string>
