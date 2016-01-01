@@ -138,4 +138,35 @@ public class clsSettings {
     public String getPath() {
         return preference.getString(this.ctx.getString(R.string.prefPath), Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
     }
+
+    public void setBackground(int drawable) {
+        editor.putInt(this.ctx.getString(R.string.prefBackground), drawable);
+        this.editor.commit();
+    }
+
+    public int getBackground() {
+        return preference.getInt(this.ctx.getString(R.string.prefBackground), R.drawable.light_bg_texture_04);
+    }
+
+    public void setCTRLCenter(int drawable) {
+        editor.putInt(this.ctx.getString(R.string.prefCTRLCenter), drawable);
+        this.editor.commit();
+    }
+
+    public int getCTRLCenter() {
+        return preference.getInt(this.ctx.getString(R.string.prefCTRLCenter), R.drawable.dark_bg_texture_04);
+    }
+
+    public void setHeader(int drawable) {
+        editor.putInt(this.ctx.getString(R.string.prefHeader), drawable);
+        this.editor.commit();
+    }
+
+    public int getHeader() {
+        return preference.getInt(this.ctx.getString(R.string.prefHeader), R.drawable.medium_bg_texture_04);
+    }
+
+    public int getInt(String key) {
+        return preference.getInt(key, 0);
+    }
 }
