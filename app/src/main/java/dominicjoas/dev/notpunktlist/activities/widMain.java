@@ -5,12 +5,11 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.widget.RemoteViews;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 
 import dominicjoas.dev.notpunktlist.R;
-import dominicjoas.dev.notpunktlist.classes.clsMarkList;
-import dominicjoas.dev.notpunktlist.classes.clsSharedPreference;
+import dominicjoas.dev.notpunktlist.classes.clsHelper;
+import dominicjoas.dev.notpunktlist.classes.clsMarkPointList;
 
 /**
  * Implementation of App Widget functionality.
@@ -45,24 +44,22 @@ public class widMain extends AppWidgetProvider {
     }
 
     private static String[] getList(Context ctx) {
-        clsSharedPreference pref =  new clsSharedPreference(ctx);
-        clsMarkList list = new clsMarkList(Double.parseDouble(pref.getMaxPoints()), !pref.getHalfPoints(), !pref.getQuarterMarks());
-        List<String> ls = list.generateList();
-        Collections.reverse(ls);
+        clsMarkPointList mpl =  clsHelper.prepareList(ctx);
+        Map<Float, Float> list = clsHelper.prepareList(ctx).generateMarkPointList();
         String[] text = new String[2];
-        if(pref.getDictMode()) {
+        if(mpl.isInDictatMode()) {
             text[0] = ctx.getString(R.string.mistakes) + "              " + ctx.getString(R.string.mark) + "\n";
         } else {
             text[0] = ctx.getString(R.string.points) + "              " + ctx.getString(R.string.mark) + "\n";
         }
         text[1] = "";
-        for(String item : ls) {
-            String before = item.split(ctx.getString(R.string.sysSplitChar))[0];
-            String after = item.split(ctx.getString(R.string.sysSplitChar))[1];
-            if(pref.getDictMode()) {
-                before = String.valueOf(Double.parseDouble(pref.getMaxPoints()) - Double.parseDouble(before));
+        for(Map.Entry<Float, Float> entry : list.entrySet()) {
+            String before = entry.getKey().toString();
+            String after = entry.getValue().toString();
+            if(mpl.isInDictatMode()) {
+                before = String.valueOf(Double.parseDouble(String.valueOf(mpl.getMaxPoints())) - Double.parseDouble(before));
             }
-            if(pref.getDictMode()) {
+            if(mpl.isInDictatMode()) {
                 text[1] += ctx.getString(R.string.mistakes) + ": " + before + " | " + ctx.getString(R.string.mark) + ":" + after + " ||";
             } else {
                 text[1] += ctx.getString(R.string.points) + ": " + before + " | " + ctx.getString(R.string.mark) + ":" + after + " ||";

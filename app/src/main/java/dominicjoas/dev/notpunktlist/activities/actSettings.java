@@ -20,6 +20,7 @@ import java.util.Arrays;
 import dominicjoas.dev.notpunktlist.R;
 import dominicjoas.dev.notpunktlist.classes.ImageAdapter;
 import dominicjoas.dev.notpunktlist.classes.clsHelper;
+import dominicjoas.dev.notpunktlist.classes.clsSettings;
 import dominicjoas.dev.notpunktlist.classes.clsSharedPreference;
 
 public class actSettings extends AppCompatActivity {
@@ -29,14 +30,14 @@ public class actSettings extends AppCompatActivity {
     Spinner lvBoxes;
     ImageButton cmdBackground;
     Button cmdSave, cmdBack, cmdSavePath;
-    clsSharedPreference pref;
+    clsSettings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actsettings);
 
-        pref = new clsSharedPreference(getApplicationContext());
+        settings = new clsSettings(getApplicationContext());
         txtPath = (TextView) findViewById(R.id.txtPath);
         grdBackgrounds = (GridView) findViewById(R.id.grdBackgrounds);
         lvBoxes = (Spinner) findViewById(R.id.lvBoxes);
@@ -48,7 +49,7 @@ public class actSettings extends AppCompatActivity {
 
         clsHelper.fillSpinner(this, lvBoxes, Arrays.asList(getString(R.string.prefHeader), getString(R.string.prefBackground), getString(R.string.prefCTRLCenter)));
         grdBackgrounds.setAdapter(new ImageAdapter(this));
-        txtPath.setText(pref.getPath());
+        txtPath.setText(settings.getPath());
         updateBackgrounds();
 
         grdBackgrounds.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -64,8 +65,7 @@ public class actSettings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    pref.setInt(lvBoxes.getSelectedItem().toString(), (int) cmdBackground.getTag());
-                    pref.save();
+                    settings.setBackground((int) cmdBackground.getTag());
                     clsHelper.createToast(getApplicationContext(), getString(R.string.infoOptionsSaved));
                 }catch(Exception ex) {
                     clsHelper.createToast(getApplicationContext(), getString(R.string.errorNoBackgroundChosen));
@@ -85,8 +85,7 @@ public class actSettings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(new File(txtPath.getText().toString()).exists()) {
-                    pref.setString(getString(R.string.prefPath), txtPath.getText().toString());
-                    pref.save();
+                    settings.setPath(txtPath.getText().toString());
                     clsHelper.createToast(getApplicationContext(), getString(R.string.infoOptionsSaved));
                 } else {
                     clsHelper.createToast(getApplicationContext(), getString(R.string.errorPathDontExist));
@@ -133,7 +132,7 @@ public class actSettings extends AppCompatActivity {
         final int sdk = android.os.Build.VERSION.SDK_INT;
         cmdBackground.setImageBitmap(null);
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            cmdBackground.setBackgroundDrawable(clsHelper.getBitmapDrawable(this,pref.getInt(lvBoxes.getSelectedItem().toString())));
+            cmdBackground.setBackgroundDrawable(clsHelper.getBitmapDrawable(this, settings.getInt(lvBoxes.getSelectedItem().toString())));
         } else {
             dangerousBG();
         }
@@ -141,6 +140,6 @@ public class actSettings extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void dangerousBG() {
-        cmdBackground.setBackground(clsHelper.getBitmapDrawable(this, pref.getInt(lvBoxes.getSelectedItem().toString())));
+        cmdBackground.setBackground(clsHelper.getBitmapDrawable(this, settings.getInt(lvBoxes.getSelectedItem().toString())));
     }
 }

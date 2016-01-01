@@ -449,6 +449,49 @@ public class actMainNew extends AppCompatActivity {
                 Intent intent = new Intent(this.getApplicationContext(), actExport.class);
                 intent.putExtra(getString(R.string.prefMaxPoints), txtMaxPoints.getText().toString());
                 intent.putExtra(getString(R.string.prefDictMode), chkDictatMode.isChecked());
+                intent.putExtra(getString(R.string.prefMarkPoints), chkMarkPoints.isChecked());
+                switch (cmbMarkMultiplier.getSelectedItemPosition()) {
+                    case 0:
+                        intent.putExtra(getString(R.string.prefMarkSigns), false);
+                        intent.putExtra(getString(R.string.prefMarkMultiplier), 0.1f);
+                        break;
+                    case 1:
+                        intent.putExtra(getString(R.string.prefMarkSigns), false);
+                        intent.putExtra(getString(R.string.prefMarkMultiplier), 0.25f);
+                        break;
+                    case 2:
+                        intent.putExtra(getString(R.string.prefMarkSigns), false);
+                        intent.putExtra(getString(R.string.prefMarkMultiplier), 0.5f);
+                        break;
+                    case 3:
+                        intent.putExtra(getString(R.string.prefMarkSigns), false);
+                        intent.putExtra(getString(R.string.prefMarkMultiplier), 1.0f);
+                        break;
+                    case 4:
+                        intent.putExtra(getString(R.string.prefMarkSigns), true);
+                        intent.putExtra(getString(R.string.prefMarkMultiplier), 0.25f);
+                        break;
+                }
+                switch (cmbPointsMultiplier.getSelectedItemPosition()) {
+                    case 0:
+                        intent.putExtra(getString(R.string.prefPointsMultiplier), 0.1f);
+                        break;
+                    case 1:
+                        intent.putExtra(getString(R.string.prefPointsMultiplier), 0.25f);
+                        break;
+                    case 2:
+                        intent.putExtra(getString(R.string.prefPointsMultiplier), 0.5f);
+                        break;
+                    case 3:
+                        intent.putExtra(getString(R.string.prefPointsMultiplier), 1.0f);
+                        break;
+                }
+                intent.putExtra(getString(R.string.prefCustomMark), txtCustomMark.getText());
+                intent.putExtra(getString(R.string.prefCustomPoints), txtCustomPoints.getText());
+                intent.putExtra(getString(R.string.prefBestMarkAt), txtBestMarkAt.getText());
+                intent.putExtra(getString(R.string.prefWorstMarkTo), txtWorstMarkTo.getText());
+                intent.putExtra(getString(R.string.prefView), cmbView.getSelectedItemPosition());
+                intent.putExtra(getString(R.string.prefMode), cmbMode.getSelectedItemPosition());
                 startActivityForResult(intent, 0);
             }catch (Exception ex) {
                 CharSequence text = String.valueOf(ex.toString());
