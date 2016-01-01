@@ -39,29 +39,29 @@ import java.util.Map;
 import dominicjoas.dev.notpunktlist.R;
 import dominicjoas.dev.notpunktlist.classes.clsHelper;
 import dominicjoas.dev.notpunktlist.classes.clsMarkPointList;
+import dominicjoas.dev.notpunktlist.classes.clsSettings;
 import dominicjoas.dev.notpunktlist.classes.clsSharedPreference;
 
 public class actMainNew extends AppCompatActivity {
 
     private clsMarkPointList liste;
     private Spinner cmbMode, cmbView, cmbMarkMultiplier, cmbPointsMultiplier;
-    private ArrayAdapter modeAdapter, viewAdapter, markMultiplierAdaper, pointsMultiplierAdaper;
     private RelativeLayout rlMain;
     private TableLayout tblSettings;
     private TableRow row1, row2, row3;
     private ImageButton cmdExp, cmdSearch;
     private EditText txtMaxPoints, txtSearch, txtBestMarkAt, txtWorstMarkTo, txtCustomPoints, txtCustomMark;
     private CheckBox chkMarkPoints, chkDictatMode;
-    private RadioButton optPoints, optMarks;
+    private RadioButton optPoints;
     private GridView lvMarkList, lvHeader;
     private TextView lblMaxPoints;
     private SeekBar sbBestMarkAt, sbWorstMarkTo;
+    private clsSettings settings;
 
     int tblHeight;
     ArrayAdapter<String> adapter, adapterHeader = null;
     List<String> ls = new ArrayList<>();
     List<String> lsHeader = new ArrayList<>();
-    clsSharedPreference pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +69,17 @@ public class actMainNew extends AppCompatActivity {
         setContentView(R.layout.actmainnew);
 
         try {
+            this.settings = new clsSettings(getApplicationContext());
+            ArrayAdapter<String> modeAdapter, viewAdapter, markMultiplierAdaper, pointsMultiplierAdaper;
             this.setTitle(this.getTitle() + " " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-            pref = new clsSharedPreference(getApplicationContext());
             cmbMode = (Spinner) findViewById(R.id.cmbMode);
             cmbView = (Spinner) findViewById(R.id.cmbView);
             cmbMarkMultiplier = (Spinner) findViewById(R.id.cmbMarkMultiplier);
             cmbPointsMultiplier = (Spinner) findViewById(R.id.cmbPointsMultiplier);
-            modeAdapter = new ArrayAdapter(this, R.layout.simplespinneritem, getResources().getStringArray(R.array.MODE));
-            viewAdapter = new ArrayAdapter(this, R.layout.simplespinneritem, getResources().getStringArray(R.array.VIEW));
-            markMultiplierAdaper =  new ArrayAdapter(this, R.layout.simplespinneritem, getResources().getStringArray(R.array.markMultiplier));
-            pointsMultiplierAdaper = new ArrayAdapter(this, R.layout.simplespinneritem, getResources().getStringArray(R.array.pointsMultiplier));
+            modeAdapter = new ArrayAdapter<>(this, R.layout.simplespinneritem, getResources().getStringArray(R.array.MODE));
+            viewAdapter = new ArrayAdapter<>(this, R.layout.simplespinneritem, getResources().getStringArray(R.array.VIEW));
+            markMultiplierAdaper =  new ArrayAdapter<>(this, R.layout.simplespinneritem, getResources().getStringArray(R.array.markMultiplier));
+            pointsMultiplierAdaper = new ArrayAdapter<>(this, R.layout.simplespinneritem, getResources().getStringArray(R.array.pointsMultiplier));
             cmbMode.setAdapter(modeAdapter);
             cmbView.setAdapter(viewAdapter);
             cmbMarkMultiplier.setAdapter(markMultiplierAdaper);
@@ -94,7 +95,6 @@ public class actMainNew extends AppCompatActivity {
             txtSearch = (EditText) findViewById(R.id.txtSearch);
             chkMarkPoints = (CheckBox) findViewById(R.id.chkMarkPoints);
             chkDictatMode = (CheckBox) findViewById(R.id.chkDictatMode);
-            optMarks = (RadioButton) findViewById(R.id.optMarks);
             optPoints = (RadioButton) findViewById(R.id.optPoints);
             lvMarkList = (GridView) findViewById(R.id.grdMarkList);
             lvHeader = (GridView) findViewById(R.id.lvHeader);
@@ -110,8 +110,44 @@ public class actMainNew extends AppCompatActivity {
             row3 = (TableRow) findViewById(R.id.row3);
 
             lvHeader.setEnabled(false);
-            txtMaxPoints.setText(pref.getMaxPoints());
-            chkDictatMode.setChecked(pref.getDictMode());
+            txtMaxPoints.setText(settings.getMaxPoints());
+            chkDictatMode.setChecked(settings.getDictMode());
+            chkMarkPoints.setChecked(settings.getMarkPoints());
+            cmbMode.setSelection(settings.getMode());
+            cmbView.setSelection(settings.getView());
+            float mark = settings.getMarkMultiplier();
+            if(mark == 0.1f) {
+                cmbMarkMultiplier.setSelection(0);
+            } else if(mark == 0.25f) {
+                if(settings.getMarkSign()) {
+                    cmbMarkMultiplier.setSelection(4);
+                } else {
+                    cmbMarkMultiplier.setSelection(1);
+                }
+            } else if(mark == 0.5f) {
+                cmbMarkMultiplier.setSelection(2);
+            } else {
+                cmbMarkMultiplier.setSelection(3);
+            }
+
+            float points = settings.getPointsMultiplier();
+            if(points == 0.1f) {
+                cmbPointsMultiplier.setSelection(0);
+            } else if(points == 0.25f) {
+                cmbPointsMultiplier.setSelection(1);
+            } else if(points == 0.5f) {
+                cmbPointsMultiplier.setSelection(2);
+            } else {
+                cmbPointsMultiplier.setSelection(3);
+            }
+
+            sbBestMarkAt.setProgress((int) settings.getBestMarkAt());
+            sbWorstMarkTo.setProgress((int) settings.getWorstMarkTo());
+            txtWorstMarkTo.setText(String.valueOf(settings.getWorstMarkTo()));
+            txtBestMarkAt.setText(String.valueOf(settings.getBestMarkAt()));
+            txtCustomMark.setText(String.valueOf(settings.getCustomMark()));
+            txtCustomPoints.setText(String.valueOf(settings.getCustomPoints()));
+
             txtBestMarkAt.setText(txtMaxPoints.getText());
             sbBestMarkAt.setMax(Integer.parseInt(txtBestMarkAt.getText().toString()));
             sbWorstMarkTo.setMax(Integer.parseInt(txtBestMarkAt.getText().toString()));
@@ -220,11 +256,13 @@ public class actMainNew extends AppCompatActivity {
                     int progress = sbBestMarkAt.getProgress();
                     sbBestMarkAt.setProgress(sbWorstMarkTo.getProgress());
                     sbWorstMarkTo.setProgress(progress);
+                    lblMaxPoints.setText(getString(R.string.maxMistakes));
                 } else {
                     optPoints.setText(getString(R.string.points));
                     int progress = sbBestMarkAt.getProgress();
                     sbBestMarkAt.setProgress(sbWorstMarkTo.getProgress());
                     sbWorstMarkTo.setProgress(progress);
+                    lblMaxPoints.setText(getString(R.string.maxPoints));
                 }
             }
         });
@@ -359,9 +397,50 @@ public class actMainNew extends AppCompatActivity {
         }
 
         if(id == R.id.menSaveSettings) {
-            pref.setMaxPoints(txtMaxPoints.getText().toString());
-            pref.setDictMode(chkDictatMode.isChecked());
-            pref.save();
+            settings.setDictMode(chkDictatMode.isChecked());
+            settings.setMarkPoints(chkMarkPoints.isChecked());
+            settings.setBestMarkAt((float) sbBestMarkAt.getProgress());
+            settings.setWorstMarkTo((float) sbWorstMarkTo.getProgress());
+            settings.setCustomMark(Float.parseFloat(txtCustomMark.getText().toString()));
+            settings.setCustomPoints(Float.parseFloat(txtCustomPoints.getText().toString()));
+            switch (cmbMarkMultiplier.getSelectedItemPosition()) {
+                case 0:
+                    settings.setMarkSign(false);
+                    settings.setMarkMultiplier(0.1f);
+                    break;
+                case 1:
+                    settings.setMarkSign(false);
+                    settings.setMarkMultiplier(0.25f);
+                    break;
+                case 2:
+                    settings.setMarkSign(false);
+                    settings.setMarkMultiplier(0.5f);
+                    break;
+                case 3:
+                    settings.setMarkSign(false);
+                    settings.setMarkMultiplier(1.0f);
+                    break;
+                case 4:
+                    settings.setMarkSign(true);
+                    settings.setMarkMultiplier(0.25f);
+                    break;
+            }
+            switch (cmbPointsMultiplier.getSelectedItemPosition()) {
+                case 0:
+                    settings.setPointsMultiplier(0.1f);
+                    break;
+                case 1:
+                    settings.setPointsMultiplier(0.25f);
+                    break;
+                case 2:
+                    settings.setPointsMultiplier(0.5f);
+                    break;
+                case 3:
+                    settings.setPointsMultiplier(1.0f);
+                    break;
+            }
+            settings.setMode(cmbMode.getSelectedItemPosition());
+            settings.setView(cmbView.getSelectedItemPosition());
             clsHelper.createToast(getApplicationContext(), getString(R.string.infoSettingsSaved));
         }
 
@@ -405,8 +484,7 @@ public class actMainNew extends AppCompatActivity {
                     return null;
                 }
                 boolean dictat = chkDictatMode.isChecked();
-                float markMulti = 0.0f;
-                float pointMulti = 0.0f;
+                float markMulti, pointMulti;
                 boolean marksign = false;
                 if(cmbMarkMultiplier.getSelectedItemPosition()==0) {
                     markMulti = 0.1f;
