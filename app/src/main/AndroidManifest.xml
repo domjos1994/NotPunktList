@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dominicjoas.dev.notpunktlist" >
+    package="dominicjoas.dev.notpunktlist">
 
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -13,25 +13,29 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/sysTitle"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.actMain"
-            android:label="@string/sysTitle" >
+            android:name=".activities.actMainNew"
+            android:label="@string/sysTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <data
+                    android:scheme="http"
+                    android:host="github.com"
+                    android:pathPrefix="/domjos1994"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.actExport"
-            android:label="@string/actExportTitle" >
-        </activity>
+            android:label="@string/actExportTitle"/>
 
         <receiver
             android:name=".activities.widMain"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/sysTitle" >
+            android:label="@string/sysTitle">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -42,9 +46,9 @@
         </receiver>
         <receiver
             android:name=".activities.widDetailed"
+            android:enabled="@bool/is_post_api_11"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/widDetailedTitle"
-            android:enabled="@bool/is_post_api_11">
+            android:label="@string/widDetailedTitle">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -56,14 +60,14 @@
 
         <activity
             android:name=".activities.actSettings"
-            android:label="@string/actSettingsTitle" >
-        </activity>
+            android:label="@string/actSettingsTitle"/>
 
         <service
             android:name=".classes.WidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            android:enabled="@bool/is_post_api_11">
-        </service>
+            android:enabled="@bool/is_post_api_11"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <activity android:name=".activities.actMain"/>
     </application>
 
 </manifest>
