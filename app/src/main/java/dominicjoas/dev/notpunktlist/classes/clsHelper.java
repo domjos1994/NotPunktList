@@ -59,4 +59,44 @@ public class clsHelper {
         builder.setMessage(value);
         builder.create().show();
     }
+
+    public static clsMarkPointList prepareList(Context mContext) {
+        clsSettings settings = new clsSettings(mContext);
+        clsMarkPointList markPointList = new clsMarkPointList(Integer.parseInt(settings.getMaxPoints()), settings.getMarkMultiplier(), settings.getPointsMultiplier(), settings.getDictMode());
+        markPointList.setCustomPoints(settings.getCustomPoints());
+        markPointList.setCustomMark(settings.getCustomMark());
+        markPointList.setBestMarkAt(settings.getBestMarkAt());
+        markPointList.setWorstMarkTo(settings.getWorstMarkTo());
+        markPointList.setMarkSigns(settings.getMarkSign());
+        markPointList.setMarkPoints(settings.getMarkPoints());
+        switch (settings.getMode()) {
+            case 0:
+                markPointList.setMode(clsMarkPointList.Mode.linear);
+                break;
+            case 1:
+                markPointList.setMode(clsMarkPointList.Mode.exponential);
+                break;
+            case 2:
+                markPointList.setMode(clsMarkPointList.Mode.withCrease);
+                break;
+            case 3:
+                markPointList.setMode(clsMarkPointList.Mode.ihk);
+                break;
+        }
+        switch (settings.getView()) {
+            case 0:
+                markPointList.setView(clsMarkPointList.View.bestMarkFirst);
+                break;
+            case 1:
+                markPointList.setView(clsMarkPointList.View.worstMarkFirst);
+                break;
+            case 2:
+                markPointList.setView(clsMarkPointList.View.highestPointsFirst);
+                break;
+            case 3:
+                markPointList.setView(clsMarkPointList.View.lowestPointsFirst);
+                break;
+        }
+        return markPointList;
+    }
 }
