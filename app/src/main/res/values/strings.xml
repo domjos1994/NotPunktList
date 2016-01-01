@@ -49,6 +49,16 @@
     <string name="prefQuarterMarks">quarterMarks</string>
     <string name="prefHalfPoints">halfPoints</string>
     <string name="prefDictMode">dictMode</string>
+    <string name="prefMarkMultiplier">markMultiplier</string>
+    <string name="prefPointsMultiplier">pointsMultiplier</string>
+    <string name="prefBestMarkAt">bestMarkAt</string>
+    <string name="prefWorstMarkTo">worstMarkTo</string>
+    <string name="prefCustomPoints">customPoints</string>
+    <string name="prefCustomMark">customMark</string>
+    <string name="prefMode">mode</string>
+    <string name="prefView">view</string>
+    <string name="prefMarkPoints">markPoints</string>
+    <string name="prefMarkSigns">markSigns</string>
 
     <string name="sysTitle">NotPunktList</string>
     <string name="sysCharset">UTF-8</string>
@@ -94,7 +104,7 @@
     </string-array>
 
     <string-array name="markMultiplier">
-        <item>Zehntel Noten</item>
+        <item>zehntel Noten</item>
         <item>viertel Noten</item>
         <item>halbe Noten</item>
         <item>ganze Noten</item>
