@@ -126,7 +126,6 @@
                     android:layout_span="40"
                     android:text="@string/markPoints"
                     android:textSize="12sp"
-                    android:checked="true"
                     style="@style/TextColor"/>
             </TableRow>
             <TableRow
@@ -163,7 +162,9 @@
                     android:layout_width="wrap_content"
                     android:gravity="center_vertical"
                     android:layout_span="5"
-                    android:id="@+id/txtBestMarkAt"/>
+                    android:id="@+id/txtBestMarkAt"
+                    android:inputType="numberDecimal"
+                    android:enabled="false"/>
             </TableRow>
             <TableRow
                 android:layout_width="fill_parent"
@@ -187,7 +188,9 @@
                     android:gravity="center_vertical"
                     android:layout_span="5"
                     android:id="@+id/txtWorstMarkTo"
-                    android:text="@string/worst"/>
+                    android:text="@string/worst"
+                    android:inputType="numberDecimal"
+                    android:enabled="false"/>
             </TableRow>
             <TableRow
                 android:layout_width="fill_parent"
