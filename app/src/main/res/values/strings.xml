@@ -17,6 +17,8 @@
     <string name="close">Beenden</string>
     <string name="okay">OKAY</string>
 
+    <string name="markPoints">Notenpunkte</string>
+
     <string name="expTitle">NotPunktList - Export</string>
     <string name="expFilePart">export</string>
     <string name="expXMLRoot">notpunktlistexport</string>
@@ -76,4 +78,37 @@
 
     <string name="widMainTitle">NotPunktList - Widget</string>
     <string name="widDetailedTitle">NotPunktList - Detailliert</string>
+
+    <string-array name="MODE">
+        <item>linear</item>
+        <item>exponentiell</item>
+        <item>mit Knicks</item>
+        <item>nach IHK</item>
+    </string-array>
+
+    <string-array name="VIEW">
+        <item>beste Note zuerst</item>
+        <item>schlechteste Note zuerst</item>
+        <item>höchste Punktzahl zuerst</item>
+        <item>niedrigste Punktzahl zuerst</item>
+    </string-array>
+
+    <string-array name="markMultiplier">
+        <item>Zehntel Noten</item>
+        <item>viertel Noten</item>
+        <item>halbe Noten</item>
+        <item>ganze Noten</item>
+        <item>Noten in Zeichen</item>
+    </string-array>
+
+    <string-array name="pointsMultiplier">
+        <item>zehntel Punkte</item>
+        <item>viertel Punkte</item>
+        <item>halbe Punkte</item>
+        <item>ganze Punkte</item>
+    </string-array>
+
+    <string name="bestMarkAt">Beste \nNote ab</string>
+    <string name="worstMarkTo">Schlechteste \nNote bis</string>
+    <string name="worst">0</string>
 </resources>
