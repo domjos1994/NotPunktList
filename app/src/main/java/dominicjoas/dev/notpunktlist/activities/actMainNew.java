@@ -121,6 +121,8 @@ public class actMainNew extends AppCompatActivity {
             txtWorstMarkTo.setEnabled(false);
             txtCustomMark.setText("3.5");
             txtCustomPoints.setText(String.valueOf(Integer.parseInt(txtMaxPoints.getText().toString())/2));
+            cmbPointsMultiplier.setSelection(2);
+
 
             controlWithCrease();
 
@@ -129,8 +131,8 @@ public class actMainNew extends AppCompatActivity {
             clsHelper.createToast(getApplicationContext(), getString(R.string.errorProblemsWithSettings));
         }
 
-        adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1, ls);
-        adapterHeader = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, lsHeader);
+        adapter = new ArrayAdapter<>(this, R.layout.marklistitem, ls);
+        adapterHeader = new ArrayAdapter<>(this, R.layout.headeritem, lsHeader);
         if(getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
             tblHeight = tblSettings.getLayoutParams().height;
             tblSettings.getLayoutParams().height = cmdExp.getLayoutParams().height;
@@ -254,13 +256,55 @@ public class actMainNew extends AppCompatActivity {
             }
         });
 
+        txtCustomPoints.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                createList();
+            }
+        });
+
+        txtCustomMark.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                createList();
+            }
+        });
+
         cmdSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (optPoints.isSelected()) {
-                    clsHelper.createToast(getApplicationContext(), String.valueOf(liste.searchMark(Float.parseFloat(txtSearch.getText().toString()), liste.getView(), createList())));
+                if (optPoints.isChecked()) {
+                    if(chkDictatMode.isChecked()) {
+                        clsHelper.createToast(getApplicationContext(), "Die Note " + txtSearch.getText() + " gibt es \nbei " + String.valueOf(liste.searchPoints(Float.parseFloat(txtSearch.getText().toString()), liste.getView(), createList())) + " " + getString(R.string.mistakes) + "n!");
+                    } else {
+                        clsHelper.createToast(getApplicationContext(), "Die Note " + txtSearch.getText() + " gibt es \nbei " + String.valueOf(liste.searchPoints(Float.parseFloat(txtSearch.getText().toString()), liste.getView(), createList())) + " " + getString(R.string.points) + "n!");
+                    }
                 } else {
-                    clsHelper.createToast(getApplicationContext(), String.valueOf(liste.searchPoints(Float.parseFloat(txtSearch.getText().toString()), liste.getView(), createList())));
+                    if(chkDictatMode.isChecked()) {
+                        clsHelper.createToast(getApplicationContext(), txtSearch.getText() + " Fehler gibt es \nbei der Note " + String.valueOf(liste.searchMark(Float.parseFloat(txtSearch.getText().toString()), liste.getView(), createList())) + "!");
+                    } else {
+                        clsHelper.createToast(getApplicationContext(), txtSearch.getText() + " Punkte gibt es \nbei der Note " + String.valueOf(liste.searchMark(Float.parseFloat(txtSearch.getText().toString()), liste.getView(), createList())) + "!");
+                    }
                 }
             }
         });
