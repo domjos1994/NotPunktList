@@ -256,7 +256,7 @@ public class clsMarkPointList {
         return this.mpMarkPointList;
     }
     
-    public Map getSignedList(Map<Float, Float> list) {
+    public Map<String, String> getSignedList(Map<Float, Float> list) {
         Map<String, String> signedList = new LinkedHashMap<>();
         if(this.isMarkSigns()) {
             if(this.fltMarkMultiplier==0.25f && !this.isMarkPoints()) {
