@@ -66,8 +66,6 @@
             android:name=".classes.WidgetService"
             android:enabled="@bool/is_post_api_11"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
-
-        <activity android:name=".activities.actMain"/>
     </application>
 
 </manifest>
