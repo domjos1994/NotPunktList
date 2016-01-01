@@ -191,7 +191,8 @@
                 android:layout_width="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_span="10"
-                android:id="@+id/txtCustomPoints"/>
+                android:id="@+id/txtCustomPoints"
+                android:inputType="numberDecimal"/>
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -203,7 +204,8 @@
                 android:layout_width="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_span="10"
-                android:id="@+id/txtCustomMark"/>
+                android:id="@+id/txtCustomMark"
+                android:inputType="numberDecimal"/>
         </TableRow>
         <TableRow
             android:layout_width="fill_parent"
